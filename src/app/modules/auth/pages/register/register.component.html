@@ -1,0 +1,26 @@
+<h2>Crear Cuenta</h2>
+
+<form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="form-container">
+
+  <div class="form-field">
+    <label>Nombre:</label>
+    <input type="text" formControlName="name">
+  </div>
+
+  <div class="form-field">
+    <label>Email:</label>
+    <input type="email" formControlName="email">
+  </div>
+
+  <div class="form-field">
+    <label>Contraseña:</label>
+    <input type="password" formControlName="password">
+  </div>
+
+  <button type="submit">Registrarme</button>
+
+</form>
+
+<br>
+
+<a routerLink="/auth">¿Ya tienes cuenta? Inicia sesión aquí</a>

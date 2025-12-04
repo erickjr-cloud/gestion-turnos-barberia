@@ -1,0 +1,22 @@
+<h2>Iniciar Sesión</h2>
+
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="form-container">
+
+  <div class="form-field">
+    <label>Email:</label>
+    <input type="email" formControlName="email">
+  </div>
+
+  <div class="form-field">
+    <label>Contraseña:</label>
+    <input type="password" formControlName="password">
+  </div>
+
+  <button type="submit">Ingresar</button>
+
+</form>
+
+<p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+<br>
+<a routerLink="/auth/register">¿No tienes cuenta? Regístrate aquí</a>
