@@ -12,3 +12,16 @@ nav a {
 nav a:hover {
   text-decoration: underline;
 }
+.logout-btn {
+  background-color: #d9534f;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 15px;
+}
+
+.logout-btn:hover {
+  background-color: #c9302c;
+}
