@@ -1,1 +1,21 @@
-<p>create-turno.component works!</p>
+<h2>Crear Turno</h2>
+
+<form [formGroup]="turnoForm" (ngSubmit)="onSubmit()">
+
+  <label>Cliente:</label>
+  <input type="text" formControlName="cliente">
+
+  <label>Fecha:</label>
+  <input type="date" formControlName="fecha">
+
+  <label>Hora:</label>
+  <input type="time" formControlName="hora">
+
+  <label>Servicio:</label>
+  <input type="text" formControlName="servicio">
+
+  <label>Notas:</label>
+  <textarea formControlName="notas"></textarea>
+
+  <button type="submit">Guardar Turno</button>
+</form>
