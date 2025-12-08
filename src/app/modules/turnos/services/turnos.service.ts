@@ -1,5 +1,13 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collection, addDoc, collectionData } from '@angular/fire/firestore';
+import {
+  Firestore,
+  collection,
+  addDoc,
+  collectionData,
+  doc,
+  updateDoc,
+  deleteDoc
+} from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Turno } from '../interfaces/turno.interface';
 
@@ -8,20 +16,34 @@ import { Turno } from '../interfaces/turno.interface';
 })
 export class TurnosService {
 
-  private turnosRef;
+  private turnosCollection: any;
 
   constructor(private firestore: Firestore) {
-    this.turnosRef = collection(this.firestore, 'turnos'); 
-  }
-
-  // Crear un turno
-  crearTurno(turno: Turno) {
-    return addDoc(this.turnosRef, turno);
+    this.turnosCollection = collection(this.firestore, 'turnos');
   }
 
   // Obtener todos los turnos
-  obtenerTurnos(): Observable<Turno[]> {
-    return collectionData(this.turnosRef, { idField: 'id' }) as Observable<Turno[]>;
+  getTurnos(): Observable<Turno[]> {
+    return collectionData(this.turnosCollection, {
+      idField: 'id'
+    }) as Observable<Turno[]>;
   }
 
+  // Crear un turno
+  createTurno(turno: Turno) {
+    const { id, ...data } = turno;
+    return addDoc(this.turnosCollection, data);
+  }
+
+  // Actualizar
+  updateTurno(id: string, cambios: Partial<Turno>) {
+    const turnoRef = doc(this.firestore, `turnos/${id}`);
+    return updateDoc(turnoRef, cambios as any);
+  }
+
+  // Eliminar
+  deleteTurno(id: string) {
+    const turnoRef = doc(this.firestore, `turnos/${id}`);
+    return deleteDoc(turnoRef);
+  }
 }
