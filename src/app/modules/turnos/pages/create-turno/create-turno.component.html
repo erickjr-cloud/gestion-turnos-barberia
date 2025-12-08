@@ -1,4 +1,4 @@
-<h2>Crear Turno</h2>
+<h2>{{ titulo }}</h2>
 
 <form [formGroup]="turnoForm" (ngSubmit)="onSubmit()">
 
@@ -31,14 +31,13 @@
 
   <br><br>
 
-  <!-- mensaje de error general -->
   <p *ngIf="errorMessage" class="error">
     {{ errorMessage }}
   </p>
 
-  <!-- botón -->
+  <!-- BOTÓN DINÁMICO -->
   <button type="submit" [disabled]="turnoForm.invalid || loading">
-    {{ loading ? 'Guardando...' : 'Guardar Turno' }}
+    {{ loading ? 'Guardando...' : (modoEdicion ? 'Guardar Cambios' : 'Crear Turno') }}
   </button>
 
 </form>

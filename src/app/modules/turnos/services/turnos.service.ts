@@ -5,6 +5,7 @@ import {
   addDoc,
   collectionData,
   doc,
+  docData,
   updateDoc,
   deleteDoc
 } from '@angular/fire/firestore';
@@ -27,6 +28,12 @@ export class TurnosService {
     return collectionData(this.turnosCollection, {
       idField: 'id'
     }) as Observable<Turno[]>;
+  }
+
+  // 🔥 Obtener un turno por ID (PARA EDITAR)
+  getTurnoById(id: string): Observable<Turno | null> {
+    const turnoRef = doc(this.firestore, `turnos/${id}`);
+    return docData(turnoRef, { idField: 'id' }) as Observable<Turno | null>;
   }
 
   // Crear un turno

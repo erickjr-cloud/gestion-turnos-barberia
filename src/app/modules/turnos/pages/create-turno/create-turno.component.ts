@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   FormBuilder,
@@ -6,11 +6,12 @@ import {
   ReactiveFormsModule,
   Validators
 } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 import { TurnosService } from '../../services/turnos.service';
 import { AuthService } from '../../../../core/services/auth.service';
 import { Turno } from '../../interfaces/turno.interface';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-create-turno',
@@ -19,17 +20,22 @@ import { Turno } from '../../interfaces/turno.interface';
   templateUrl: './create-turno.component.html',
   styleUrls: ['./create-turno.component.css']
 })
-export class CreateTurnoComponent {
+export class CreateTurnoComponent implements OnInit {
 
   turnoForm: FormGroup;
   loading = false;
   errorMessage = '';
+  titulo = 'Crear Turno';
+
+  modoEdicion = false;
+  turnoId: string | null = null;
 
   constructor(
     private fb: FormBuilder,
     private turnosService: TurnosService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {
     this.turnoForm = this.fb.group({
       cliente: ['', Validators.required],
@@ -37,48 +43,94 @@ export class CreateTurnoComponent {
       hora: ['', Validators.required],
       servicio: ['', Validators.required],
       notas: [''],
-      estado: ['pendiente'] // 👈 agregado aquí para que coincida con el modelo Turno
+      estado: ['pendiente']
     });
+  }
+
+  ngOnInit(): void {
+
+    this.route.paramMap
+      .pipe(
+        switchMap(params => {
+          const id = params.get('id');
+          if (!id) {
+            this.modoEdicion = false;
+            this.titulo = 'Crear Turno';
+            return [];
+          }
+
+          // Modo edición
+          this.modoEdicion = true;
+          this.titulo = 'Editar Turno';
+          this.turnoId = id;
+
+          return this.turnosService.getTurnoById(id);
+        })
+      )
+      .subscribe((turno) => {
+        if (!turno) return;
+
+        // Rellena el formulario
+        this.turnoForm.patchValue({
+          cliente: turno.cliente,
+          fecha: turno.fecha,
+          hora: turno.hora,
+          servicio: turno.servicio,
+          notas: turno.notas ?? '',
+          estado: turno.estado ?? 'pendiente'
+        });
+      });
+
   }
 
   onSubmit() {
-  if (this.turnoForm.invalid) {
-    this.errorMessage = 'Completa todos los campos obligatorios.';
-    this.turnoForm.markAllAsTouched();
-    return;
-  }
+    if (this.turnoForm.invalid) {
+      this.errorMessage = 'Completa todos los campos obligatorios.';
+      this.turnoForm.markAllAsTouched();
+      return;
+    }
 
-  const user = this.authService.getCurrentUser();
-  if (!user) {
-    this.errorMessage = 'No hay usuario autenticado.';
-    return;
-  }
+    this.loading = true;
+    this.errorMessage = '';
 
-  const nuevoTurno: Turno = {
-    ...this.turnoForm.value,
-    creadoPor: user.uid
-  };
+    // MODO EDITAR
+    if (this.modoEdicion && this.turnoId) {
+      this.turnosService.updateTurno(this.turnoId, this.turnoForm.value)
+        .then(() => {
+          alert('Turno actualizado correctamente');
+          this.router.navigate(['/turnos/list']);
+        })
+        .catch(err => {
+          console.error(err);
+          this.errorMessage = 'Ocurrió un error al actualizar el turno.';
+        })
+        .finally(() => this.loading = false);
 
-  this.loading = true;
-  this.errorMessage = '';
+      return;
+    }
 
-  this.turnosService.createTurno(nuevoTurno)
-    .then(() => {
-      this.turnoForm.reset();
-      this.loading = false;
+    // MODO CREAR
+    const user = this.authService.getCurrentUser();
+    if (!user) {
+      this.errorMessage = 'No hay usuario autenticado.';
+      return;
+    }
 
-      // MENSAJE DE ÉXITO
-      alert('Turno creado correctamente');
+    const nuevoTurno: Turno = {
+      ...this.turnoForm.value,
+      creadoPor: user.uid
+    };
 
-      // Redirigir a la lista después de un pequeño delay (más profesional)
-      setTimeout(() => {
+    this.turnosService.createTurno(nuevoTurno)
+      .then(() => {
+        alert('Turno creado correctamente');
+        this.turnoForm.reset();
         this.router.navigate(['/turnos/list']);
-      }, 500);
-    })
-    .catch(err => {
-      console.error(err);
-      this.loading = false;
-      this.errorMessage = 'Ocurrió un error al guardar el turno.';
-    });
+      })
+      .catch(err => {
+        console.error(err);
+        this.errorMessage = 'Ocurrió un error al guardar el turno.';
+      })
+      .finally(() => this.loading = false);
   }
 }
