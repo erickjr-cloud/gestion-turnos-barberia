@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TurnosService } from '../../services/turnos.service';
-import { Turno } from '../../interfaces/turno.interface';
 import { Observable } from 'rxjs';
+import { Turno } from '../../interfaces/turno.interface';
 
 @Component({
   selector: 'app-turnos-home',
@@ -11,13 +11,11 @@ import { Observable } from 'rxjs';
   templateUrl: './turnos-home.component.html',
   styleUrls: ['./turnos-home.component.css']
 })
-export class TurnosHomeComponent implements OnInit {
+export class TurnosHomeComponent {
 
-  turnos$!: Observable<Turno[]>;
+  turnos$: Observable<Turno[]>;
 
-  constructor(private turnosService: TurnosService) {}
-
-  ngOnInit(): void {
+  constructor(private turnosService: TurnosService) {
     this.turnos$ = this.turnosService.getTurnos();
   }
 }
