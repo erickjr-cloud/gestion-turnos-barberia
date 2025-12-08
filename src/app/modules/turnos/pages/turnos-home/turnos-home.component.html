@@ -1,5 +1,17 @@
 <h1>Gestión de Turnos</h1>
 
+<!-- 🟣 DASHBOARD BÁSICO -->
+<h3>Resumen de Turnos</h3>
+
+<ul>
+  <li>Total de turnos: <strong>{{ totalTurnos }}</strong></li>
+  <li>Pendientes: <strong>{{ pendientes }}</strong></li>
+  <li>Completados: <strong>{{ completados }}</strong></li>
+  <li>Cancelados: <strong>{{ cancelados }}</strong></li>
+</ul>
+
+<hr>
+
 <p>Selecciona una opción:</p>
 
 <nav>
@@ -9,5 +21,5 @@
 
 <hr>
 
-<!-- AQUÍ SE CARGARÁN LAS PÁGINAS HIJAS -->
+<!-- Páginas hijas -->
 <router-outlet></router-outlet>
