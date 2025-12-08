@@ -1,6 +1,17 @@
 <h2>Lista de Turnos</h2>
 
-<div *ngIf="turnos$ | async as turnos; else cargando">
+<!-- 🟣 FILTROS -->
+<div>
+  <label>Filtrar por servicio: </label>
+  <input type="text" [(ngModel)]="filtroServicio">
+
+  <label>Filtrar por fecha: </label>
+  <input type="date" [(ngModel)]="filtroFecha">
+</div>
+
+<br>
+
+<div *ngIf="turnosFiltrados$ | async as turnos; else cargando">
 
   <div *ngIf="turnos.length > 0; else vacio">
 
@@ -10,10 +21,8 @@
         {{ t.fecha }} {{ t.hora }} — {{ t.servicio }}
         <span>({{ t.estado }})</span>
 
-        <!-- 🟣 BOTONES AÑADIDOS -->
         <button (click)="editarTurno(t)">Editar</button>
         <button (click)="eliminarTurno(t)">Eliminar</button>
-
       </li>
     </ul>
 
@@ -26,5 +35,5 @@
 </ng-template>
 
 <ng-template #vacio>
-  <p>No hay turnos registrados todavía.</p>
+  <p>No hay turnos registrados con esos filtros.</p>
 </ng-template>
