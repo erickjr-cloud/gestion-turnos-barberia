@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; // 🟣 IMPORTANTE
+import { FormsModule } from '@angular/forms';
 import { TurnosService } from '../../services/turnos.service';
 import { Turno } from '../../interfaces/turno.interface';
 import { Observable, combineLatest, map, startWith } from 'rxjs';
@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-turnos-list',
   standalone: true,
-  imports: [CommonModule, FormsModule], // 🟣 AÑADIDO
+  imports: [CommonModule, FormsModule],
   templateUrl: './turnos-list.component.html',
   styleUrls: ['./turnos-list.component.css']
 })
@@ -21,6 +21,12 @@ export class TurnosListComponent implements OnInit {
   filtroFecha: string = '';
 
   turnosFiltrados$!: Observable<Turno[]>;
+  turnosPaginados$!: Observable<Turno[]>;
+
+  // 🟣 PAGINACIÓN
+  paginaActual: number = 1;
+  itemsPorPagina: number = 5;
+  totalPaginas: number = 1;
 
   constructor(
     private turnosService: TurnosService,
@@ -30,6 +36,7 @@ export class TurnosListComponent implements OnInit {
   ngOnInit(): void {
     this.turnos$ = this.turnosService.getTurnos();
 
+    // 🔥 1) FILTRAR
     this.turnosFiltrados$ = combineLatest([
       this.turnos$,
       this.createInputStream(() => this.filtroServicio),
@@ -49,8 +56,21 @@ export class TurnosListComponent implements OnInit {
         });
       })
     );
+
+    // 🔥 2) PAGINAR
+    this.turnosPaginados$ = this.turnosFiltrados$.pipe(
+      map(turnos => {
+        this.totalPaginas = Math.ceil(turnos.length / this.itemsPorPagina);
+
+        const inicio = (this.paginaActual - 1) * this.itemsPorPagina;
+        const fin = inicio + this.itemsPorPagina;
+
+        return turnos.slice(inicio, fin);
+      })
+    );
   }
 
+  // Convierte variables en streams
   createInputStream(fn: () => any) {
     return new Observable(sub => {
       const interval = setInterval(() => sub.next(fn()), 200);
@@ -58,11 +78,13 @@ export class TurnosListComponent implements OnInit {
     }).pipe(startWith(fn()));
   }
 
+  // 🟣 EDITAR
   editarTurno(turno: Turno) {
     if (!turno.id) return;
     this.router.navigate(['/turnos/editar', turno.id]);
   }
 
+  // 🟣 ELIMINAR
   eliminarTurno(turno: Turno) {
     if (!turno.id) return;
 
@@ -75,5 +97,18 @@ export class TurnosListComponent implements OnInit {
         console.error('Error al eliminar turno:', err);
         alert('Ocurrió un error al eliminar el turno.');
       });
+  }
+
+  // 🟣 CAMBIAR DE PÁGINA
+  paginaSiguiente() {
+    if (this.paginaActual < this.totalPaginas) {
+      this.paginaActual++;
+    }
+  }
+
+  paginaAnterior() {
+    if (this.paginaActual > 1) {
+      this.paginaActual--;
+    }
   }
 }

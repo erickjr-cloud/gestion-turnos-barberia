@@ -11,7 +11,8 @@
 
 <br>
 
-<div *ngIf="turnosFiltrados$ | async as turnos; else cargando">
+<!-- 🟣 LISTA CON PAGINACIÓN -->
+<div *ngIf="turnosPaginados$ | async as turnos; else cargando">
 
   <div *ngIf="turnos.length > 0; else vacio">
 
@@ -25,6 +26,19 @@
         <button (click)="eliminarTurno(t)">Eliminar</button>
       </li>
     </ul>
+
+    <!-- 🟣 CONTROLES DE PAGINACIÓN -->
+    <div>
+      <button (click)="paginaAnterior()" [disabled]="paginaActual === 1">
+        Anterior
+      </button>
+
+      <span>Página {{ paginaActual }} de {{ totalPaginas }}</span>
+
+      <button (click)="paginaSiguiente()" [disabled]="paginaActual === totalPaginas">
+        Siguiente
+      </button>
+    </div>
 
   </div>
 
