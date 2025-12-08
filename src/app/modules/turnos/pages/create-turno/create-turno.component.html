@@ -1,43 +1,54 @@
-<h2>{{ titulo }}</h2>
+<section class="turno-form-container">
 
-<form [formGroup]="turnoForm" (ngSubmit)="onSubmit()">
+  <h2>{{ titulo }}</h2>
 
-  <label>Cliente:</label>
-  <input type="text" formControlName="cliente">
-  <p *ngIf="turnoForm.get('cliente')?.touched && turnoForm.get('cliente')?.invalid" class="error">
-    El nombre del cliente es obligatorio.
-  </p>
+  <form [formGroup]="turnoForm" (ngSubmit)="onSubmit()">
 
-  <label>Fecha:</label>
-  <input type="date" formControlName="fecha">
-  <p *ngIf="turnoForm.get('fecha')?.touched && turnoForm.get('fecha')?.invalid" class="error">
-    Selecciona una fecha válida.
-  </p>
+    <div class="form-group">
+      <label>Cliente:</label>
+      <input type="text" formControlName="cliente">
+      <p *ngIf="turnoForm.get('cliente')?.touched && turnoForm.get('cliente')?.invalid" class="error">
+        El nombre del cliente es obligatorio.
+      </p>
+    </div>
 
-  <label>Hora:</label>
-  <input type="time" formControlName="hora">
-  <p *ngIf="turnoForm.get('hora')?.touched && turnoForm.get('hora')?.invalid" class="error">
-    Selecciona una hora válida.
-  </p>
+    <div class="form-group">
+      <label>Fecha:</label>
+      <input type="date" formControlName="fecha">
+      <p *ngIf="turnoForm.get('fecha')?.touched && turnoForm.get('fecha')?.invalid" class="error">
+        Selecciona una fecha válida.
+      </p>
+    </div>
 
-  <label>Servicio:</label>
-  <input type="text" formControlName="servicio">
-  <p *ngIf="turnoForm.get('servicio')?.touched && turnoForm.get('servicio')?.invalid" class="error">
-    El servicio es obligatorio.
-  </p>
+    <div class="form-group">
+      <label>Hora:</label>
+      <input type="time" formControlName="hora">
+      <p *ngIf="turnoForm.get('hora')?.touched && turnoForm.get('hora')?.invalid" class="error">
+        Selecciona una hora válida.
+      </p>
+    </div>
 
-  <label>Notas (opcional):</label>
-  <textarea formControlName="notas"></textarea>
+    <div class="form-group">
+      <label>Servicio:</label>
+      <input type="text" formControlName="servicio">
+      <p *ngIf="turnoForm.get('servicio')?.touched && turnoForm.get('servicio')?.invalid" class="error">
+        El servicio es obligatorio.
+      </p>
+    </div>
 
-  <br><br>
+    <div class="form-group">
+      <label>Notas (opcional):</label>
+      <textarea formControlName="notas"></textarea>
+    </div>
 
-  <p *ngIf="errorMessage" class="error">
-    {{ errorMessage }}
-  </p>
+    <p *ngIf="errorMessage" class="error">
+      {{ errorMessage }}
+    </p>
 
-  <!-- BOTÓN DINÁMICO -->
-  <button type="submit" [disabled]="turnoForm.invalid || loading">
-    {{ loading ? 'Guardando...' : (modoEdicion ? 'Guardar Cambios' : 'Crear Turno') }}
-  </button>
+    <button type="submit" [disabled]="turnoForm.invalid || loading" class="btn">
+      {{ loading ? 'Guardando...' : (modoEdicion ? 'Guardar Cambios' : 'Crear Turno') }}
+    </button>
 
-</form>
+  </form>
+
+</section>

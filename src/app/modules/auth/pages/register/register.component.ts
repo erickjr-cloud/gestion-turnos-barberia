@@ -35,15 +35,25 @@ export class RegisterComponent {
       return;
     }
 
-    const { email, password } = this.registerForm.value;
+    const { name, email, password } = this.registerForm.value;
 
-    // 🔥 REGISTRO REAL EN FIREBASE
+    // 🔥 PASO 1: Registro en Firebase Auth
     this.authService.register(email, password)
-      .then(() => {
+      .then(async (cred) => {
         this.errorMessage = '';
+
+        if (cred.user) {
+          // 🔥 PASO 2: Crear documento en Firestore
+          await this.authService.createUserDocument(
+            cred.user,
+            name,
+            'cliente'  // 👈 rol por defecto
+          );
+        }
+
         this.successMessage = 'Cuenta creada con éxito';
 
-        // Espera 1 segundo y redirige
+        // Redirigir al login
         setTimeout(() => {
           this.router.navigate(['/auth']);
         }, 1000);

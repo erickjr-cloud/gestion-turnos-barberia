@@ -1,53 +1,60 @@
-<h2>Lista de Turnos</h2>
+<section class="turnos-list-container">
 
-<!-- 🟣 FILTROS -->
-<div>
-  <label>Filtrar por servicio: </label>
-  <input type="text" [(ngModel)]="filtroServicio">
+  <h2>Lista de Turnos</h2>
 
-  <label>Filtrar por fecha: </label>
-  <input type="date" [(ngModel)]="filtroFecha">
-</div>
+  <!-- 🟣 FILTROS -->
+  <div class="filtros-container">
+    <label>Filtrar por servicio:</label>
+    <input type="text" [(ngModel)]="filtroServicio">
 
-<br>
+    <label>Filtrar por fecha:</label>
+    <input type="date" [(ngModel)]="filtroFecha">
+  </div>
 
-<!-- 🟣 LISTA CON PAGINACIÓN -->
-<div *ngIf="turnosPaginados$ | async as turnos; else cargando">
+  <hr>
 
-  <div *ngIf="turnos.length > 0; else vacio">
+  <!-- 🟣 LISTA CON PAGINACIÓN -->
+  <div *ngIf="turnosPaginados$ | async as turnos; else cargando">
 
-    <ul>
-      <li *ngFor="let t of turnos">
-        <strong>{{ t.cliente }}</strong> — 
-        {{ t.fecha }} {{ t.hora }} — {{ t.servicio }}
-        <span>({{ t.estado }})</span>
+    <div *ngIf="turnos.length > 0; else vacio">
 
-        <button (click)="editarTurno(t)">Editar</button>
-        <button (click)="eliminarTurno(t)">Eliminar</button>
-      </li>
-    </ul>
+      <ul class="turnos-ul">
+        <li *ngFor="let t of turnos" class="turno-item">
 
-    <!-- 🟣 CONTROLES DE PAGINACIÓN -->
-    <div>
-      <button (click)="paginaAnterior()" [disabled]="paginaActual === 1">
-        Anterior
-      </button>
+          <div class="turno-info">
+            <strong>{{ t.cliente }}</strong>  
+            <span>{{ t.fecha }} {{ t.hora }}</span>
+            <span>{{ t.servicio }}</span>
+            <span class="estado">({{ t.estado }})</span>
+          </div>
 
-      <span>Página {{ paginaActual }} de {{ totalPaginas }}</span>
+          <div class="turno-actions">
+            <button (click)="editarTurno(t)">Editar</button>
+            <button (click)="eliminarTurno(t)">Eliminar</button>
+          </div>
 
-      <button (click)="paginaSiguiente()" [disabled]="paginaActual === totalPaginas">
-        Siguiente
-      </button>
+        </li>
+      </ul>
+
+      <!-- PAGINACIÓN -->
+      <div class="paginacion-container">
+        <button (click)="paginaAnterior()" [disabled]="paginaActual === 1">Anterior</button>
+
+        <span>Página {{ paginaActual }} de {{ totalPaginas }}</span>
+
+        <button (click)="paginaSiguiente()" [disabled]="paginaActual === totalPaginas">Siguiente</button>
+      </div>
+
     </div>
 
   </div>
 
-</div>
+  <ng-template #cargando>
+    <p>Cargando turnos...</p>
+  </ng-template>
 
-<ng-template #cargando>
-  <p>Cargando turnos...</p>
-</ng-template>
+  <ng-template #vacio>
+    <p>No hay turnos registrados con esos filtros.</p>
+  </ng-template>
 
-<ng-template #vacio>
-  <p>No hay turnos registrados con esos filtros.</p>
-</ng-template>
+</section>
