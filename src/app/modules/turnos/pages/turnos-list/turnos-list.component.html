@@ -1,0 +1,25 @@
+<h2>Lista de Turnos</h2>
+
+<div *ngIf="turnos$ | async as turnos; else cargando">
+
+  <div *ngIf="turnos.length > 0; else vacio">
+
+    <ul>
+      <li *ngFor="let t of turnos">
+        <strong>{{ t.cliente }}</strong> — 
+        {{ t.fecha }} {{ t.hora }} — {{ t.servicio }}
+        <span>({{ t.estado }})</span>
+      </li>
+    </ul>
+
+  </div>
+
+</div>
+
+<ng-template #cargando>
+  <p>Cargando turnos...</p>
+</ng-template>
+
+<ng-template #vacio>
+  <p>No hay turnos registrados todavía.</p>
+</ng-template>
