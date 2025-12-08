@@ -5,6 +5,7 @@ import { TurnosService } from '../../services/turnos.service';
 import { Turno } from '../../interfaces/turno.interface';
 import { Observable, combineLatest, map, startWith } from 'rxjs';
 import { Router } from '@angular/router';
+import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-turnos-list',
@@ -16,27 +17,26 @@ import { Router } from '@angular/router';
 export class TurnosListComponent implements OnInit {
 
   turnos$!: Observable<Turno[]>;
+  turnosFiltrados$!: Observable<Turno[]>;
 
   filtroServicio: string = '';
   filtroFecha: string = '';
 
-  turnosFiltrados$!: Observable<Turno[]>;
-  turnosPaginados$!: Observable<Turno[]>;
-
-  // 🟣 PAGINACIÓN
-  paginaActual: number = 1;
-  itemsPorPagina: number = 5;
-  totalPaginas: number = 1;
+  // 🟣 Declarar el rol sin inicializar
+  role$!: Observable<any>;
 
   constructor(
     private turnosService: TurnosService,
+    private authService: AuthService, 
     private router: Router
-  ) {}
+  ) {
+    // 🟣 Inicializar correctamente aquí
+    this.role$ = this.authService.currentUserRole$;
+  }
 
   ngOnInit(): void {
     this.turnos$ = this.turnosService.getTurnos();
 
-    // 🔥 1) FILTRAR
     this.turnosFiltrados$ = combineLatest([
       this.turnos$,
       this.createInputStream(() => this.filtroServicio),
@@ -56,21 +56,8 @@ export class TurnosListComponent implements OnInit {
         });
       })
     );
-
-    // 🔥 2) PAGINAR
-    this.turnosPaginados$ = this.turnosFiltrados$.pipe(
-      map(turnos => {
-        this.totalPaginas = Math.ceil(turnos.length / this.itemsPorPagina);
-
-        const inicio = (this.paginaActual - 1) * this.itemsPorPagina;
-        const fin = inicio + this.itemsPorPagina;
-
-        return turnos.slice(inicio, fin);
-      })
-    );
   }
 
-  // Convierte variables en streams
   createInputStream(fn: () => any) {
     return new Observable(sub => {
       const interval = setInterval(() => sub.next(fn()), 200);
@@ -78,17 +65,16 @@ export class TurnosListComponent implements OnInit {
     }).pipe(startWith(fn()));
   }
 
-  // 🟣 EDITAR
   editarTurno(turno: Turno) {
     if (!turno.id) return;
     this.router.navigate(['/turnos/editar', turno.id]);
   }
 
-  // 🟣 ELIMINAR
   eliminarTurno(turno: Turno) {
     if (!turno.id) return;
 
     const confirmacion = confirm(`¿Seguro que deseas eliminar el turno de ${turno.cliente}?`);
+
     if (!confirmacion) return;
 
     this.turnosService.deleteTurno(turno.id)
@@ -97,18 +83,5 @@ export class TurnosListComponent implements OnInit {
         console.error('Error al eliminar turno:', err);
         alert('Ocurrió un error al eliminar el turno.');
       });
-  }
-
-  // 🟣 CAMBIAR DE PÁGINA
-  paginaSiguiente() {
-    if (this.paginaActual < this.totalPaginas) {
-      this.paginaActual++;
-    }
-  }
-
-  paginaAnterior() {
-    if (this.paginaActual > 1) {
-      this.paginaActual--;
-    }
   }
 }

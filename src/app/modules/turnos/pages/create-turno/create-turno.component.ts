@@ -11,12 +11,15 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { TurnosService } from '../../services/turnos.service';
 import { AuthService } from '../../../../core/services/auth.service';
 import { Turno } from '../../interfaces/turno.interface';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, of } from 'rxjs';
 
 @Component({
   selector: 'app-create-turno',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,        // 🟣 NECESARIO para *ngIf, *ngFor
+    ReactiveFormsModule
+  ],
   templateUrl: './create-turno.component.html',
   styleUrls: ['./create-turno.component.css']
 })
@@ -48,7 +51,6 @@ export class CreateTurnoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
     this.route.paramMap
       .pipe(
         switchMap(params => {
@@ -56,10 +58,9 @@ export class CreateTurnoComponent implements OnInit {
           if (!id) {
             this.modoEdicion = false;
             this.titulo = 'Crear Turno';
-            return [];
+            return of(null);
           }
 
-          // Modo edición
           this.modoEdicion = true;
           this.titulo = 'Editar Turno';
           this.turnoId = id;
@@ -70,7 +71,6 @@ export class CreateTurnoComponent implements OnInit {
       .subscribe((turno) => {
         if (!turno) return;
 
-        // Rellena el formulario
         this.turnoForm.patchValue({
           cliente: turno.cliente,
           fecha: turno.fecha,
@@ -80,7 +80,6 @@ export class CreateTurnoComponent implements OnInit {
           estado: turno.estado ?? 'pendiente'
         });
       });
-
   }
 
   onSubmit() {
@@ -113,6 +112,7 @@ export class CreateTurnoComponent implements OnInit {
     const user = this.authService.getCurrentUser();
     if (!user) {
       this.errorMessage = 'No hay usuario autenticado.';
+      this.loading = false;
       return;
     }
 
