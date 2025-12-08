@@ -1,28 +1,10 @@
 <h1>Gestión de Turnos</h1>
 
-<button class="logout-btn">Cerrar sesión</button>
-
-<p>Bienvenido al módulo de turnos. Aquí construiremos la lista y registro de turnos.</p>
+<p>Selecciona una opción:</p>
 
 <nav>
-  <a routerLink="/turnos">Listado</a> |
-  <a routerLink="/turnos/crear">Crear turno</a>
+  <a routerLink="/turnos/list">📋 Ver lista de turnos</a> |
+  <a routerLink="/turnos/crear">➕ Crear nuevo turno</a>
 </nav>
 
 <hr>
-
-<!-- Aquí luego aparecerá la lista de turnos -->
-<h2>Listado de Turnos</h2>
-
-<ul *ngIf="turnos$ | async as turnos; else cargando">
-  <li *ngFor="let t of turnos">
-    <strong>{{ t.cliente }}</strong> - {{ t.servicio }}
-    <br>
-    {{ t.fecha }} {{ t.hora }} |
-    <span style="color: gray;">{{ t.estado }}</span>
-  </li>
-</ul>
-
-<ng-template #cargando>
-  <p>Cargando turnos...</p>
-</ng-template>
