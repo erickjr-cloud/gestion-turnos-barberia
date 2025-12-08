@@ -42,36 +42,43 @@ export class CreateTurnoComponent {
   }
 
   onSubmit() {
-    if (this.turnoForm.invalid) {
-      this.errorMessage = 'Completa todos los campos obligatorios.';
-      this.turnoForm.markAllAsTouched();
-      return;
-    }
+  if (this.turnoForm.invalid) {
+    this.errorMessage = 'Completa todos los campos obligatorios.';
+    this.turnoForm.markAllAsTouched();
+    return;
+  }
 
-    const user = this.authService.getCurrentUser();
-    if (!user) {
-      this.errorMessage = 'No hay usuario autenticado.';
-      return;
-    }
+  const user = this.authService.getCurrentUser();
+  if (!user) {
+    this.errorMessage = 'No hay usuario autenticado.';
+    return;
+  }
 
-    const nuevoTurno: Turno = {
-      ...this.turnoForm.value,
-      creadoPor: user.uid
-    };
+  const nuevoTurno: Turno = {
+    ...this.turnoForm.value,
+    creadoPor: user.uid
+  };
 
-    this.loading = true;
-    this.errorMessage = '';
+  this.loading = true;
+  this.errorMessage = '';
 
-    this.turnosService.createTurno(nuevoTurno)
-      .then(() => {
-        this.loading = false;
-        this.turnoForm.reset();
-        this.router.navigate(['/turnos/list']); // 👈 Mejor ir a la lista
-      })
-      .catch(err => {
-        console.error(err);
-        this.loading = false;
-        this.errorMessage = 'Ocurrió un error al guardar el turno.';
-      });
+  this.turnosService.createTurno(nuevoTurno)
+    .then(() => {
+      this.turnoForm.reset();
+      this.loading = false;
+
+      // MENSAJE DE ÉXITO
+      alert('Turno creado correctamente');
+
+      // Redirigir a la lista después de un pequeño delay (más profesional)
+      setTimeout(() => {
+        this.router.navigate(['/turnos/list']);
+      }, 500);
+    })
+    .catch(err => {
+      console.error(err);
+      this.loading = false;
+      this.errorMessage = 'Ocurrió un error al guardar el turno.';
+    });
   }
 }
