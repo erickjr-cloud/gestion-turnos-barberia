@@ -36,7 +36,8 @@ export class CreateTurnoComponent {
       fecha: ['', Validators.required],
       hora: ['', Validators.required],
       servicio: ['', Validators.required],
-      notas: ['']
+      notas: [''],
+      estado: ['pendiente'] // 👈 agregado aquí para que coincida con el modelo Turno
     });
   }
 
@@ -55,7 +56,6 @@ export class CreateTurnoComponent {
 
     const nuevoTurno: Turno = {
       ...this.turnoForm.value,
-      estado: 'pendiente',
       creadoPor: user.uid
     };
 
@@ -66,8 +66,7 @@ export class CreateTurnoComponent {
       .then(() => {
         this.loading = false;
         this.turnoForm.reset();
-        // Por ahora, volvemos al home de turnos
-        this.router.navigate(['/turnos']);
+        this.router.navigate(['/turnos/list']); // 👈 Mejor ir a la lista
       })
       .catch(err => {
         console.error(err);

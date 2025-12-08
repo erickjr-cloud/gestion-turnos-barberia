@@ -4,18 +4,41 @@
 
   <label>Cliente:</label>
   <input type="text" formControlName="cliente">
+  <p *ngIf="turnoForm.get('cliente')?.touched && turnoForm.get('cliente')?.invalid" class="error">
+    El nombre del cliente es obligatorio.
+  </p>
 
   <label>Fecha:</label>
   <input type="date" formControlName="fecha">
+  <p *ngIf="turnoForm.get('fecha')?.touched && turnoForm.get('fecha')?.invalid" class="error">
+    Selecciona una fecha válida.
+  </p>
 
   <label>Hora:</label>
   <input type="time" formControlName="hora">
+  <p *ngIf="turnoForm.get('hora')?.touched && turnoForm.get('hora')?.invalid" class="error">
+    Selecciona una hora válida.
+  </p>
 
   <label>Servicio:</label>
   <input type="text" formControlName="servicio">
+  <p *ngIf="turnoForm.get('servicio')?.touched && turnoForm.get('servicio')?.invalid" class="error">
+    El servicio es obligatorio.
+  </p>
 
-  <label>Notas:</label>
+  <label>Notas (opcional):</label>
   <textarea formControlName="notas"></textarea>
 
-  <button type="submit">Guardar Turno</button>
+  <br><br>
+
+  <!-- mensaje de error general -->
+  <p *ngIf="errorMessage" class="error">
+    {{ errorMessage }}
+  </p>
+
+  <!-- botón -->
+  <button type="submit" [disabled]="turnoForm.invalid || loading">
+    {{ loading ? 'Guardando...' : 'Guardar Turno' }}
+  </button>
+
 </form>
