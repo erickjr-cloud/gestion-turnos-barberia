@@ -1,15 +1,16 @@
 import { Component } from '@angular/core';
 import { CommonModule, NgIf } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AuthService } from '../../../../core/services/auth.service';
+import { AuthService, UserRole } from '../../../../core/services/auth.service';
 import { Router, RouterLink } from '@angular/router';
+import { filter, take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [
     CommonModule,
-    NgIf,                // 🟣 NECESARIO EN ANGULAR 17
+    NgIf,
     ReactiveFormsModule,
     RouterLink
   ],
@@ -43,7 +44,21 @@ export class LoginComponent {
     this.authService.login(email, password)
       .then(() => {
         this.errorMessage = '';
-        this.router.navigate(['/turnos']);
+
+        // 🟣 ESPERAR A QUE SE CARGUE EL ROL DESDE FIRESTORE
+        this.authService.currentUserRole$
+          .pipe(
+            filter((rol: UserRole | null) => rol !== null),
+            take(1)
+          )
+          .subscribe((rol: UserRole | null) => {
+            console.log('ROL DETECTADO:', rol);
+
+            // 🔥 AQUÍ LUEGO REDIRECCIONAMOS SEGÚN EL ROL
+            // for now:
+            this.router.navigate(['/turnos']);
+          });
+
       })
       .catch((err) => {
         console.error(err);
