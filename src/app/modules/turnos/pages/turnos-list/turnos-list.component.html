@@ -9,6 +9,11 @@
         <strong>{{ t.cliente }}</strong> — 
         {{ t.fecha }} {{ t.hora }} — {{ t.servicio }}
         <span>({{ t.estado }})</span>
+
+        <!-- 🟣 BOTONES AÑADIDOS -->
+        <button (click)="editarTurno(t)">Editar</button>
+        <button (click)="eliminarTurno(t)">Eliminar</button>
+
       </li>
     </ul>
 

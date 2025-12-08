@@ -10,10 +10,16 @@ export const TURNOS_ROUTES: Routes = [
   },
   {
     path: 'list',
-    component: TurnosListComponent   // 👈 NUEVA pantalla de lista
+    component: TurnosListComponent
   },
   {
     path: 'crear',
-    component: CreateTurnoComponent  // 👈 más adelante la implementamos
+    component: CreateTurnoComponent
+  },
+
+  // 🟣 NUEVA RUTA PARA EDITAR TURNOS
+  {
+    path: 'editar/:id',
+    component: CreateTurnoComponent
   }
 ];
