@@ -27,19 +27,25 @@ export class TurnosListComponent implements OnInit {
 
   // 🟣 FUNCIÓN PARA EDITAR
   editarTurno(turno: Turno) {
-    if (!turno.id) return;             // debe venir desde Firestore
+    if (!turno.id) return;
     this.router.navigate(['/turnos/editar', turno.id]);
   }
 
-  // 🟣 FUNCIÓN PARA ELIMINAR (Estructura inicial, sin lógica)
+  // 🟣 FUNCIÓN PARA ELIMINAR (LOGICA REAL)
   eliminarTurno(turno: Turno) {
     if (!turno.id) return;
-    
+
     const confirmacion = confirm(`¿Seguro que deseas eliminar el turno de ${turno.cliente}?`);
 
     if (!confirmacion) return;
 
-    // 🔥 LÓGICA REAL LA HACEMOS EN LA SIGUIENTE MICRO-TAREA
-    console.log("Eliminar turno -> ID:", turno.id); 
+    this.turnosService.deleteTurno(turno.id)
+      .then(() => {
+        alert(`El turno de ${turno.cliente} fue eliminado correctamente.`);
+      })
+      .catch(err => {
+        console.error('Error al eliminar turno:', err);
+        alert('Ocurrió un error al eliminar el turno.');
+      });
   }
 }
