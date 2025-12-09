@@ -3,7 +3,7 @@ import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { map, take } from 'rxjs/operators';
 
-export const clientGuard: CanActivateFn = () => {
+export const superAdminGuard: CanActivateFn = () => {
 
   const authService = inject(AuthService);
   const router = inject(Router);
@@ -11,10 +11,12 @@ export const clientGuard: CanActivateFn = () => {
   return authService.currentUserRole$.pipe(
     take(1),
     map(rol => {
-      if (rol === 'cliente' || rol === 'admin' || rol === 'superadmin') {
+      if (rol === 'superadmin') {
         return true;
+      } else {
+        router.navigate(['/auth']);
+        return false;
       }
-      return router.createUrlTree(['/auth']);
     })
   );
 };

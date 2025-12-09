@@ -3,16 +3,18 @@ import { authGuard } from './core/guards/auth.guard';
 import { clientGuard } from './core/guards/client.guard';
 import { barberGuard } from './core/guards/barber.guard';
 import { adminGuard } from './core/guards/admin.guard';
+import { superAdminGuard } from './core/guards/superadmin.guard';
 
 export const routes: Routes = [
-  // 🔵 RUTAS DE AUTENTICACIÓN
+
+  // LOGIN / REGISTER
   {
     path: 'auth',
     loadChildren: () =>
       import('./modules/auth/auth.routes').then(m => m.AUTH_ROUTES)
   },
 
-  // 🟢 CLIENTE — VE SUS PROPIOS TURNOS
+  // CLIENTE
   {
     path: 'mis-turnos',
     canActivate: [authGuard, clientGuard],
@@ -20,7 +22,7 @@ export const routes: Routes = [
       import('./modules/turnos/turnos.routes').then(m => m.TURNOS_ROUTES)
   },
 
-  // 🟦 BARBERO — VE TODOS LOS TURNOS PROFESIONALES
+  // BARBERO
   {
     path: 'turnos',
     canActivate: [authGuard, barberGuard],
@@ -28,24 +30,23 @@ export const routes: Routes = [
       import('./modules/turnos/turnos.routes').then(m => m.TURNOS_ROUTES)
   },
 
-  // 🔴 ADMINISTRADOR — PANEL COMPLETO
+  // ADMINISTRADOR
   {
     path: 'admin',
     canActivate: [authGuard, adminGuard],
     loadChildren: () =>
-      import('./modules/turnos/turnos.routes').then(m => m.TURNOS_ROUTES)
+      import('./modules/admin/admin.routes').then(m => m.ADMIN_ROUTES)
   },
 
-  // RUTA POR DEFECTO
+  // SUPER ADMIN (si le quieres crear su propio panel)
   {
-    path: '',
-    redirectTo: 'auth',
-    pathMatch: 'full'
+    path: 'superadmin',
+    canActivate: [authGuard, superAdminGuard],
+    loadChildren: () =>
+      import('./modules/admin/admin.routes').then(m => m.ADMIN_ROUTES)
   },
 
-  // TODO LO DEMÁS → LOGIN
-  {
-    path: '**',
-    redirectTo: 'auth'
-  }
+  // DEFAULT
+  { path: '', redirectTo: 'auth', pathMatch: 'full' },
+  { path: '**', redirectTo: 'auth' }
 ];

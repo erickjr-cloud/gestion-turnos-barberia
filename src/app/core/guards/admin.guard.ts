@@ -11,12 +11,10 @@ export const adminGuard: CanActivateFn = () => {
   return authService.currentUserRole$.pipe(
     take(1),
     map(rol => {
-      if (rol === 'admin') {
+      if (rol === 'admin' || rol === 'superadmin') {
         return true;
-      } else {
-        router.navigate(['/auth']);
-        return false;
       }
+      return router.createUrlTree(['/auth']);
     })
   );
 };

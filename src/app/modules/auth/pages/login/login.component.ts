@@ -45,18 +45,37 @@ export class LoginComponent {
       .then(() => {
         this.errorMessage = '';
 
-        // 🟣 ESPERAR A QUE SE CARGUE EL ROL DESDE FIRESTORE
+        // 🟣 ESPERAR A QUE LLEGUE EL ROL DESDE FIRESTORE
         this.authService.currentUserRole$
           .pipe(
-            filter((rol: UserRole | null) => rol !== null),
+            filter((rol: UserRole | null) => rol !== null), // solo pasa cuando ya hay rol
             take(1)
           )
           .subscribe((rol: UserRole | null) => {
             console.log('ROL DETECTADO:', rol);
 
-            // 🔥 AQUÍ LUEGO REDIRECCIONAMOS SEGÚN EL ROL
-            // for now:
-            this.router.navigate(['/turnos']);
+            // 🔥 REDIRECCIONAR SEGÚN EL ROL
+            switch (rol) {
+              case 'superadmin':
+                this.router.navigate(['/superadmin']);
+                break;
+
+              case 'admin':
+                this.router.navigate(['/admin']);
+                break;
+
+              case 'barbero':
+                this.router.navigate(['/turnos']);
+                break;
+
+              case 'cliente':
+                this.router.navigate(['/mis-turnos']);
+                break;
+
+              default:
+                this.router.navigate(['/auth']);
+                break;
+            }
           });
 
       })

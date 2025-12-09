@@ -1,0 +1,12 @@
+<h2>Panel del Administrador</h2>
+
+<p *ngIf="(role$ | async) === 'admin'">
+  Bienvenido administrador. Desde aquí puedes gestionar barberos, clientes y turnos.
+</p>
+
+<ul>
+  <li><a routerLink="/turnos">Ver todos los turnos</a></li>
+  <li><a routerLink="/mis-turnos">Ver mis turnos (como cliente)</a></li>
+  <li><strong>En el futuro:</strong> Gestionar barberos</li>
+  <li><strong>En el futuro:</strong> Crear nuevos administradores</li>
+</ul>

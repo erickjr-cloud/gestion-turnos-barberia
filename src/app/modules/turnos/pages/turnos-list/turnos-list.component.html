@@ -1,6 +1,5 @@
 <h2>Lista de Turnos</h2>
 
-<!-- 🟣 FILTROS -->
 <div>
   <label>Filtrar por servicio: </label>
   <input type="text" [(ngModel)]="filtroServicio">
@@ -11,24 +10,42 @@
 
 <br>
 
-<!-- 🟣 LISTA -->
 <div *ngIf="turnosFiltrados$ | async as turnos; else cargando">
 
   <div *ngIf="turnos.length > 0; else vacio">
 
     <ul>
       <li *ngFor="let t of turnos">
-        <strong>{{ t.cliente }}</strong> — 
+
+        <strong>{{ t.cliente }}</strong> —
         {{ t.fecha }} {{ t.hora }} — {{ t.servicio }}
         <span>({{ t.estado }})</span>
 
-        <!-- BOTONES -->
-        <button (click)="editarTurno(t)">Editar</button>
-        <button (click)="eliminarTurno(t)">Eliminar</button>
+        <!-- ADMIN / BARBERO -->
+        <button *ngIf="(role$ | async) === 'barbero' || (role$ | async) === 'admin'"
+                (click)="editarTurno(t)">
+          Editar
+        </button>
 
-        <!-- EJEMPLO: mostrar botón solo al barbero -->
-        <button *ngIf="(role$ | async) === 'barbero'">
+        <button *ngIf="(role$ | async) === 'admin'"
+                (click)="eliminarTurno(t)">
+          Eliminar
+        </button>
+
+        <button *ngIf="(role$ | async) === 'barbero' || (role$ | async) === 'admin'"
+                (click)="confirmarTurno(t)">
           Confirmar
+        </button>
+
+        <button *ngIf="(role$ | async) === 'barbero' || (role$ | async) === 'admin'"
+                (click)="completarTurno(t)">
+          Completar
+        </button>
+
+        <!-- CLIENTE: cancelar su turno -->
+        <button *ngIf="(role$ | async) === 'cliente' && t.creadoPor === uid"
+                (click)="cancelarTurnoCliente(t)">
+          Cancelar mi turno
         </button>
 
       </li>

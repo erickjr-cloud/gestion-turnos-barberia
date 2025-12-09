@@ -22,19 +22,23 @@ export class TurnosListComponent implements OnInit {
   filtroServicio: string = '';
   filtroFecha: string = '';
 
-  // 🟣 Declarar el rol sin inicializar
   role$!: Observable<any>;
+  uid: string | null = null;
 
   constructor(
     private turnosService: TurnosService,
-    private authService: AuthService, 
+    private authService: AuthService,
     private router: Router
   ) {
-    // 🟣 Inicializar correctamente aquí
     this.role$ = this.authService.currentUserRole$;
+
+    this.authService.currentUser$.subscribe(user => {
+      this.uid = user?.uid ?? null;
+    });
   }
 
   ngOnInit(): void {
+
     this.turnos$ = this.turnosService.getTurnos();
 
     this.turnosFiltrados$ = combineLatest([
@@ -43,6 +47,7 @@ export class TurnosListComponent implements OnInit {
       this.createInputStream(() => this.filtroFecha),
     ]).pipe(
       map(([turnos, servicio, fecha]) => {
+
         return turnos.filter(t => {
           const coincideServicio =
             servicio.trim() === '' ||
@@ -54,6 +59,7 @@ export class TurnosListComponent implements OnInit {
 
           return coincideServicio && coincideFecha;
         });
+
       })
     );
   }
@@ -74,7 +80,6 @@ export class TurnosListComponent implements OnInit {
     if (!turno.id) return;
 
     const confirmacion = confirm(`¿Seguro que deseas eliminar el turno de ${turno.cliente}?`);
-
     if (!confirmacion) return;
 
     this.turnosService.deleteTurno(turno.id)
@@ -84,4 +89,37 @@ export class TurnosListComponent implements OnInit {
         alert('Ocurrió un error al eliminar el turno.');
       });
   }
+
+  confirmarTurno(turno: Turno) {
+    if (!turno.id) return;
+
+    this.turnosService.confirmarTurno(turno.id)
+      .then(() => alert('Turno confirmado'))
+      .catch(err => console.error(err));
+  }
+
+  completarTurno(turno: Turno) {
+    if (!turno.id) return;
+
+    this.turnosService.completarTurno(turno.id)
+      .then(() => alert('Turno completado'))
+      .catch(err => console.error(err));
+  }
+
+  cancelarTurnoCliente(turno: Turno) {
+    if (!turno.id) return;
+
+    if (turno.creadoPor !== this.uid) {
+      alert("Solo puedes cancelar tus propios turnos.");
+      return;
+    }
+
+    const ok = confirm("¿Seguro que deseas cancelar tu turno?");
+    if (!ok) return;
+
+    this.turnosService.cancelarTurno(turno.id)
+      .then(() => alert("Tu turno fue cancelado."))
+      .catch(err => console.error(err));
+  }
+
 }

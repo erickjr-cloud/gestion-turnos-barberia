@@ -1,35 +1,47 @@
 import { Injectable } from '@angular/core';
-import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, User } from '@angular/fire/auth';
+import {
+  Auth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  User
+} from '@angular/fire/auth';
 import { onAuthStateChanged } from '@firebase/auth';
 import { BehaviorSubject, Observable } from 'rxjs';
+import {
+  Firestore,
+  doc,
+  setDoc,
+  getDoc
+} from '@angular/fire/firestore';
 
-import { Firestore, doc, setDoc, docData } from '@angular/fire/firestore';
-import { take } from 'rxjs/operators';
-
-export type UserRole = 'cliente' | 'barbero' | 'admin';
+// 🟣 TIPOS DE ROL
+export type UserRole = 'cliente' | 'barbero' | 'admin' | 'superadmin';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
+  // Usuario actual (Auth)
   private currentUserSubject = new BehaviorSubject<User | null>(null);
-  public currentUser$: Observable<User | null> = this.currentUserSubject.asObservable();
+  public currentUser$: Observable<User | null> =
+    this.currentUserSubject.asObservable();
 
-  // 🟣 NUEVO: rol del usuario
+  // Rol actual del usuario (Firestore)
   private currentUserRoleSubject = new BehaviorSubject<UserRole | null>(null);
-  public currentUserRole$: Observable<UserRole | null> = this.currentUserRoleSubject.asObservable();
+  public currentUserRole$: Observable<UserRole | null> =
+    this.currentUserRoleSubject.asObservable();
 
   constructor(
     private auth: Auth,
     private firestore: Firestore
   ) {
-    // Mantener el estado del usuario en tiempo real
+    // Mantener sesión y rol en tiempo real
     onAuthStateChanged(this.auth, (user) => {
-      this.currentUserSubject.next(user || null);
+      this.currentUserSubject.next(user);
 
       if (user) {
-        // Cargar rol desde Firestore
         this.loadUserRole(user.uid);
       } else {
         this.currentUserRoleSubject.next(null);
@@ -37,48 +49,62 @@ export class AuthService {
     });
   }
 
-  // Registro en Firebase Auth
-  register(email: string, password: string) {
-    return createUserWithEmailAndPassword(this.auth, email, password);
+  // 🔹 Cargar rol desde Firestore
+  async loadUserRole(uid: string): Promise<void> {
+    try {
+      const ref = doc(this.firestore, `usuarios/${uid}`);
+      const snap = await getDoc(ref);
+
+      if (snap.exists()) {
+        const data: any = snap.data();
+        this.currentUserRoleSubject.next(data.rol as UserRole);
+      } else {
+        this.currentUserRoleSubject.next(null);
+      }
+    } catch (err) {
+      console.error('Error cargando rol:', err);
+      this.currentUserRoleSubject.next(null);
+    }
   }
 
-  // 🟣 NUEVO: crear documento en colección "usuarios"
-  createUserDocument(user: User, nombre: string, rol: UserRole = 'cliente') {
-    const userRef = doc(this.firestore, `usuarios/${user.uid}`);
-    return setDoc(userRef, {
-      nombre,
-      email: user.email,
-      rol
-    });
+  // 🔥 REGISTRO: crea Auth + documento en "usuarios" con rol cliente
+  register(email: string, password: string, nombre: string) {
+    return createUserWithEmailAndPassword(this.auth, email, password)
+      .then(async (cred) => {
+        const uid = cred.user.uid;
+
+        const userDoc = {
+          nombre,
+          email,
+          rol: 'cliente' as UserRole
+        };
+
+        const ref = doc(this.firestore, `usuarios/${uid}`);
+        await setDoc(ref, userDoc);
+
+        this.currentUserRoleSubject.next('cliente');
+
+        return cred;
+      });
   }
 
-  // Login
+  // 🔐 Login
   login(email: string, password: string) {
-    return signInWithEmailAndPassword(this.auth, email, password);
+    return signInWithEmailAndPassword(this.auth, email, password)
+      .then(async (cred) => {
+        await this.loadUserRole(cred.user.uid);
+        return cred;
+      });
   }
 
-  // Logout
+  // 🚪 Logout
   logout() {
+    this.currentUserRoleSubject.next(null);
     return signOut(this.auth);
   }
 
-  // Obtener usuario actual (objeto de Auth)
+  // Usuario actual (síncrono)
   getCurrentUser(): User | null {
     return this.currentUserSubject.value;
-  }
-
-  // 🟣 NUEVO: cargar el rol desde Firestore
-  loadUserRole(uid: string) {
-    const userRef = doc(this.firestore, `usuarios/${uid}`);
-
-    return docData(userRef).pipe(take(1)).subscribe({
-      next: (data: any) => {
-        const rol: UserRole | null = data?.rol ?? null;
-        this.currentUserRoleSubject.next(rol);
-      },
-      error: () => {
-        this.currentUserRoleSubject.next(null);
-      }
-    });
   }
 }
