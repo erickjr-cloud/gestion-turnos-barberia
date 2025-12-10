@@ -43,7 +43,7 @@ export const routes: Routes = [
     path: 'superadmin',
     canActivate: [authGuard, superAdminGuard],
     loadChildren: () =>
-      import('./modules/admin/admin.routes').then(m => m.ADMIN_ROUTES)
+      import('./modules/superadmin/superadmin.routes').then(m => m.SUPERADMIN_ROUTES)
   },
 
   // DEFAULT
