@@ -23,73 +23,63 @@ export class TurnosService {
     this.turnosCollection = collection(this.firestore, 'turnos');
   }
 
-  // 👉 Obtener todos los turnos
+  // ============================================
+  // 🔹 Obtener todos los turnos (tiempo real)
+  // ============================================
   getTurnos(): Observable<Turno[]> {
     return collectionData(this.turnosCollection, {
       idField: 'id'
     }) as Observable<Turno[]>;
   }
 
-  // 👉 Obtener turno por ID
+  // ============================================
+  // 🔹 Obtener un turno por ID
+  // ============================================
   getTurnoById(id: string): Observable<Turno | null> {
     const turnoRef = doc(this.firestore, `turnos/${id}`);
     return docData(turnoRef, { idField: 'id' }) as Observable<Turno | null>;
   }
 
-  // 👉 Crear turno
+  // ============================================
+  // 🔹 Crear turno
+  // ============================================
   createTurno(turno: Turno) {
     const { id, ...data } = turno;
     return addDoc(this.turnosCollection, data);
   }
 
-  // 👉 Actualizar
+  // ============================================
+  // 🔹 Actualizar turno
+  // ============================================
   updateTurno(id: string, cambios: Partial<Turno>) {
     const turnoRef = doc(this.firestore, `turnos/${id}`);
     return updateDoc(turnoRef, cambios as any);
   }
 
-  // 👉 Eliminar
+  // ============================================
+  // 🔹 Eliminar turno
+  // ============================================
   deleteTurno(id: string) {
     const turnoRef = doc(this.firestore, `turnos/${id}`);
     return deleteDoc(turnoRef);
   }
 
-  // 👉 Confirmar / completar / cancelar
+  // ============================================
+  // 🔥 Acciones de BARBERO / ADMIN
+  // ============================================
+
   confirmarTurno(id: string) {
-    const ref = doc(this.firestore, `turnos/${id}`);
-    return updateDoc(ref, { estado: 'confirmado' });
+    const turnoRef = doc(this.firestore, `turnos/${id}`);
+    return updateDoc(turnoRef, { estado: 'confirmado' });
   }
 
   completarTurno(id: string) {
-    const ref = doc(this.firestore, `turnos/${id}`);
-    return updateDoc(ref, { estado: 'completado' });
+    const turnoRef = doc(this.firestore, `turnos/${id}`);
+    return updateDoc(turnoRef, { estado: 'completado' });
   }
 
   cancelarTurno(id: string) {
-    const ref = doc(this.firestore, `turnos/${id}`);
-    return updateDoc(ref, { estado: 'cancelado' });
-  }
-
-  // ======================================
-  // ⭐ FUNCIONES DE ESTADÍSTICAS
-  // ======================================
-
-  getTurnosHoy(turnos: Turno[]) {
-    const hoy = new Date().toISOString().slice(0, 10);
-    return turnos.filter(t => t.fecha === hoy);
-  }
-
-  getTurnosFuturos(turnos: Turno[]) {
-    const hoy = new Date().toISOString().slice(0, 10);
-    return turnos.filter(t => t.fecha > hoy);
-  }
-
-  contarEstados(turnos: Turno[]) {
-    return {
-      pendientes: turnos.filter(t => t.estado === 'pendiente').length,
-      confirmados: turnos.filter(t => t.estado === 'confirmado').length,
-      completados: turnos.filter(t => t.estado === 'completado').length,
-      cancelados: turnos.filter(t => t.estado === 'cancelado').length,
-    };
+    const turnoRef = doc(this.firestore, `turnos/${id}`);
+    return updateDoc(turnoRef, { estado: 'cancelado' });
   }
 }

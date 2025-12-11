@@ -5,32 +5,35 @@ import { barberGuard } from './core/guards/barber.guard';
 import { adminGuard } from './core/guards/admin.guard';
 import { superAdminGuard } from './core/guards/superadmin.guard';
 
+// 🔥 IMPORTAR EL COMPONENTE 404
+import { NotFoundComponent } from './not-found/not-found.component';
+
 export const routes: Routes = [
 
-  // LOGIN / REGISTER
+  // 🔐 AUTENTICACIÓN
   {
     path: 'auth',
     loadChildren: () =>
       import('./modules/auth/auth.routes').then(m => m.AUTH_ROUTES)
   },
 
-  // CLIENTE
+  // 🟦 CLIENTE — SOLO ve sus turnos
   {
     path: 'mis-turnos',
     canActivate: [authGuard, clientGuard],
     loadChildren: () =>
-      import('./modules/turnos/turnos.routes').then(m => m.TURNOS_ROUTES)
+      import('./modules/turnos/turnos.routes').then(m => m.TURNOS_ROUTES_CLIENTE)
   },
 
-  // BARBERO
+  // 🟪 BARBERO — Gestión profesional de turnos
   {
     path: 'turnos',
     canActivate: [authGuard, barberGuard],
     loadChildren: () =>
-      import('./modules/turnos/turnos.routes').then(m => m.TURNOS_ROUTES)
+      import('./modules/turnos/turnos.routes').then(m => m.TURNOS_ROUTES_BARBERO)
   },
 
-  // ADMINISTRADOR
+  // 🟥 ADMINISTRADOR
   {
     path: 'admin',
     canActivate: [authGuard, adminGuard],
@@ -38,7 +41,7 @@ export const routes: Routes = [
       import('./modules/admin/admin.routes').then(m => m.ADMIN_ROUTES)
   },
 
-  // SUPER ADMIN (si le quieres crear su propio panel)
+  // 🟧 SUPERADMIN
   {
     path: 'superadmin',
     canActivate: [authGuard, superAdminGuard],
@@ -46,7 +49,9 @@ export const routes: Routes = [
       import('./modules/superadmin/superadmin.routes').then(m => m.SUPERADMIN_ROUTES)
   },
 
-  // DEFAULT
+  // ROOT
   { path: '', redirectTo: 'auth', pathMatch: 'full' },
-  { path: '**', redirectTo: 'auth' }
+
+  // 🔥 GLOBAL 404 — Muestra una página, NO te manda al login
+  { path: '**', component: NotFoundComponent }
 ];

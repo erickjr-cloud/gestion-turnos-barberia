@@ -1,5 +1,6 @@
 <h2>Lista de Turnos</h2>
 
+<!-- FILTROS -->
 <div>
   <label>Filtrar por servicio: </label>
   <input type="text" [(ngModel)]="filtroServicio">
@@ -10,6 +11,27 @@
 
 <br>
 
+<!-- 🔥 CONTROLES DE ORDENAMIENTO -->
+<div>
+  <label>Ordenar por: </label>
+  <select [(ngModel)]="criterioOrden">
+    <option value="fecha">Fecha</option>
+    <option value="hora">Hora</option>
+    <option value="cliente">Cliente</option>
+    <option value="servicio">Servicio</option>
+    <option value="estado">Estado</option>
+  </select>
+
+  <label>Dirección: </label>
+  <select [(ngModel)]="direccionOrden">
+    <option value="asc">Ascendente</option>
+    <option value="desc">Descendente</option>
+  </select>
+</div>
+
+<br>
+
+<!-- LISTA -->
 <div *ngIf="turnosFiltrados$ | async as turnos; else cargando">
 
   <div *ngIf="turnos.length > 0; else vacio">

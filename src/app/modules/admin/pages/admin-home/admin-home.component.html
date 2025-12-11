@@ -1,57 +1,35 @@
 <h2>Panel del Administrador</h2>
 
 <p *ngIf="(role$ | async) === 'admin'">
-  Bienvenido administrador. Aquí puedes gestionar barberos, clientes y turnos.
+  Bienvenido administrador. Desde aquí puedes gestionar barberos, clientes y turnos.
 </p>
 
-<p *ngIf="(role$ | async) === 'superadmin'">
-  Bienvenido SUPERADMIN. Aquí tienes acceso a todas las estadísticas del sistema.
-</p>
+<section class="dashboard">
+
+  <div class="card">
+    <h3>Turnos de hoy</h3>
+    <p class="big">{{ totalHoy }}</p>
+
+    <ul>
+      <li>Pendientes: <strong>{{ pendientesHoy }}</strong></li>
+      <li>Confirmados: <strong>{{ confirmadosHoy }}</strong></li>
+      <li>Completados: <strong>{{ completadosHoy }}</strong></li>
+      <li>Cancelados: <strong>{{ canceladosHoy }}</strong></li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Turnos futuros</h3>
+    <p class="big">{{ totalFuturos }}</p>
+    <p>Turnos programados desde mañana en adelante.</p>
+  </div>
+
+</section>
 
 <hr>
 
-<!-- 🔥 ESTADÍSTICAS HOY -->
-<h3>Estadísticas del día</h3>
-
-<div class="cards">
-
-  <div class="card">
-    <h4>Total de turnos hoy</h4>
-    <p>{{ totalHoy }}</p>
-  </div>
-
-  <div class="card">
-    <h4>Pendientes</h4>
-    <p>{{ estadosHoy.pendientes }}</p>
-  </div>
-
-  <div class="card">
-    <h4>Confirmados</h4>
-    <p>{{ estadosHoy.confirmados }}</p>
-  </div>
-
-  <div class="card">
-    <h4>Completados</h4>
-    <p>{{ estadosHoy.completados }}</p>
-  </div>
-
-  <div class="card">
-    <h4>Cancelados</h4>
-    <p>{{ estadosHoy.cancelados }}</p>
-  </div>
-
-</div>
-
-<hr>
-
-<h3>Turnos Futuros</h3>
-<p>{{ totalFuturos }}</p>
-
-<hr>
-
-<ul>
-  <li><a routerLink="/turnos">Ver todos los turnos</a></li>
-  <li><a routerLink="/mis-turnos">Ver mis turnos (como cliente)</a></li>
-  <li><a routerLink="/admin/barberos">Gestionar Barberos</a></li>
-  <li><strong>En el futuro:</strong> Crear administradores</li>
-</ul>
+<nav class="admin-links">
+  <a routerLink="/turnos">📋 Ver todos los turnos</a>
+  <a routerLink="/mis-turnos">📅 Mis turnos (como cliente)</a>
+  <a routerLink="/admin/barberos">💈 Gestionar barberos</a>
+</nav>

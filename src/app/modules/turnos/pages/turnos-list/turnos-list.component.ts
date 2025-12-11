@@ -22,10 +22,14 @@ export class TurnosListComponent implements OnInit {
   filtroServicio: string = '';
   filtroFecha: string = '';
 
+  // 🔥 NUEVO: controles de ordenamiento
+  criterioOrden: 'fecha' | 'hora' | 'cliente' | 'servicio' | 'estado' = 'fecha';
+  direccionOrden: 'asc' | 'desc' = 'asc';
+
   role$!: Observable<any>;
   uid: string | null = null;
 
-  // ← Nuevo: guardar el rol sin tocar el BehaviorSubject privado
+  // ← Rol actual (para reglas especiales del cliente)
   rolActual: string | null = null;
 
   constructor(
@@ -50,23 +54,26 @@ export class TurnosListComponent implements OnInit {
       this.turnos$,
       this.createInputStream(() => this.filtroServicio),
       this.createInputStream(() => this.filtroFecha),
+      this.createInputStream(() => this.criterioOrden),
+      this.createInputStream(() => this.direccionOrden),
     ]).pipe(
-      map(([turnos, servicio, fecha]) => {
+      map(([turnos, servicio, fecha, criterioOrden, direccionOrden]) => {
 
         const hoy = new Date();
         hoy.setHours(0, 0, 0, 0);
 
-        return turnos.filter(t => {
+        // =========================
+        // 1️⃣ FILTROS + REGLA CLIENTE
+        // =========================
+        let filtrados = turnos.filter(t => {
 
-          const fechaTurno = new Date(t.fecha + "T" + t.hora);
+          const fechaTurno = new Date(t.fecha + 'T' + t.hora);
           fechaTurno.setHours(0, 0, 0, 0);
 
-          // ============================
-          // FILTRO ESPECIAL CLIENTE
-          // ============================
+          // 🔒 REGLA ESPECIAL PARA CLIENTE:
           if (this.rolActual === 'cliente') {
 
-            // No mostrar pasados
+            // No mostrar turnos PASADOS
             if (fechaTurno < hoy) return false;
 
             // No mostrar cancelados ni completados
@@ -85,10 +92,52 @@ export class TurnosListComponent implements OnInit {
 
           return coincideServicio && coincideFecha;
         });
+
+        // =========================
+        // 2️⃣ ORDENAMIENTO
+        // =========================
+        filtrados = [...filtrados].sort((a, b) => {
+          let aVal: string = '';
+          let bVal: string = '';
+
+          switch (criterioOrden) {
+            case 'fecha':
+              aVal = a.fecha;
+              bVal = b.fecha;
+              break;
+            case 'hora':
+              aVal = a.hora;
+              bVal = b.hora;
+              break;
+            case 'cliente':
+              aVal = (a.cliente || '').toLowerCase();
+              bVal = (b.cliente || '').toLowerCase();
+              break;
+            case 'servicio':
+              aVal = (a.servicio || '').toLowerCase();
+              bVal = (b.servicio || '').toLowerCase();
+              break;
+            case 'estado':
+              aVal = (a.estado || '').toLowerCase();
+              bVal = (b.estado || '').toLowerCase();
+              break;
+          }
+
+          if (aVal < bVal) return -1;
+          if (aVal > bVal) return 1;
+          return 0;
+        });
+
+        if (direccionOrden === 'desc') {
+          filtrados = filtrados.reverse();
+        }
+
+        return filtrados;
       })
     );
   }
 
+  // ⚠️ Tu truco para "escuchar" cambios de inputs cada 200 ms
   createInputStream(fn: () => any) {
     return new Observable(sub => {
       const interval = setInterval(() => sub.next(fn()), 200);
@@ -126,11 +175,11 @@ export class TurnosListComponent implements OnInit {
     if (!turno.id) return;
 
     if (turno.creadoPor !== this.uid) {
-      alert("Solo puedes cancelar tus propios turnos.");
+      alert('Solo puedes cancelar tus propios turnos.');
       return;
     }
 
-    const ok = confirm("¿Seguro que deseas cancelar tu turno?");
+    const ok = confirm('¿Seguro que deseas cancelar tu turno?');
     if (!ok) return;
 
     this.turnosService.cancelarTurno(turno.id);
