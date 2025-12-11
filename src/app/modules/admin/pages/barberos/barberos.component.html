@@ -1,0 +1,42 @@
+<h2>Gestionar Barberos</h2>
+
+<div *ngIf="cargando">Cargando...</div>
+
+<table *ngIf="!cargando">
+
+  <thead>
+    <tr>
+      <th>Nombre</th>
+      <th>Email</th>
+      <th>Rol</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr *ngFor="let u of barberos">
+
+      <td>{{ u.nombre }}</td>
+      <td>{{ u.email }}</td>
+
+      <td>
+        <select
+          [ngModel]="u.rol"
+          (ngModelChange)="cambiarRol(u, $event)"
+        >
+          <option *ngFor="let r of roles" [value]="r">
+            {{ r }}
+          </option>
+        </select>
+      </td>
+
+      <td>
+        <button (click)="eliminar(u)" style="color: red;">
+          Eliminar
+        </button>
+      </td>
+
+    </tr>
+  </tbody>
+
+</table>
