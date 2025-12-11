@@ -11,13 +11,14 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { TurnosService } from '../../services/turnos.service';
 import { AuthService } from '../../../../core/services/auth.service';
 import { Turno } from '../../interfaces/turno.interface';
+
 import { switchMap, of } from 'rxjs';
 
 @Component({
   selector: 'app-create-turno',
   standalone: true,
   imports: [
-    CommonModule,        // 🟣 NECESARIO para *ngIf, *ngFor
+    CommonModule,
     ReactiveFormsModule
   ],
   templateUrl: './create-turno.component.html',
@@ -32,6 +33,10 @@ export class CreateTurnoComponent implements OnInit {
 
   modoEdicion = false;
   turnoId: string | null = null;
+
+  // 🔥 NUEVO: Validaciones A2
+  horaOcupada = false;
+  horasExistentes: string[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -51,6 +56,7 @@ export class CreateTurnoComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // Detectar si estamos editando
     this.route.paramMap
       .pipe(
         switchMap(params => {
@@ -80,7 +86,70 @@ export class CreateTurnoComponent implements OnInit {
           estado: turno.estado ?? 'pendiente'
         });
       });
+
+    // 🔥 Validación fecha
+    this.turnoForm.get('fecha')?.valueChanges.subscribe(() => {
+      this.validarFecha();
+      this.cargarHorasOcupadas();
+    });
+
+    // 🔥 Validación hora
+    this.turnoForm.get('hora')?.valueChanges.subscribe(() => {
+      this.validarHora();
+    });
   }
+
+  // ======================
+  // 🔥 FUNCIONES A2
+  // ======================
+
+  isInvalid(campo: string) {
+    const control = this.turnoForm.get(campo);
+    return control?.touched && control?.invalid;
+  }
+
+  validarFecha() {
+    const fecha = this.turnoForm.get('fecha')?.value;
+    if (!fecha) return;
+
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+
+    const f = new Date(fecha);
+    f.setHours(0, 0, 0, 0);
+
+    if (f < hoy) {
+      this.turnoForm.get('fecha')?.setErrors({ fechaPasada: true });
+    }
+  }
+
+  cargarHorasOcupadas() {
+    const fecha = this.turnoForm.get('fecha')?.value;
+    if (!fecha) return;
+
+    this.turnosService.getTurnos().subscribe(turnos => {
+      this.horasExistentes = turnos
+        .filter(t => t.fecha === fecha)
+        .map(t => t.hora);
+
+      this.validarHora();
+    });
+  }
+
+  validarHora() {
+    const hora = this.turnoForm.get('hora')?.value;
+    if (!hora) return;
+
+    this.horaOcupada = this.horasExistentes.includes(hora);
+
+    if (this.horaOcupada) {
+      this.turnoForm.get('hora')?.setErrors({ horaOcupada: true });
+    }
+  }
+
+  // ======================
+  // 🔥 SUBMIT
+  // ======================
 
   onSubmit() {
     if (this.turnoForm.invalid) {
@@ -89,10 +158,15 @@ export class CreateTurnoComponent implements OnInit {
       return;
     }
 
+    if (this.horaOcupada) {
+      this.errorMessage = 'La hora seleccionada ya está ocupada.';
+      return;
+    }
+
     this.loading = true;
     this.errorMessage = '';
 
-    // MODO EDITAR
+    // EDITAR
     if (this.modoEdicion && this.turnoId) {
       this.turnosService.updateTurno(this.turnoId, this.turnoForm.value)
         .then(() => {
@@ -108,7 +182,7 @@ export class CreateTurnoComponent implements OnInit {
       return;
     }
 
-    // MODO CREAR
+    // CREAR
     const user = this.authService.getCurrentUser();
     if (!user) {
       this.errorMessage = 'No hay usuario autenticado.';

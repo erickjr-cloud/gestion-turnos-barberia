@@ -5,8 +5,8 @@ import { barberGuard } from './core/guards/barber.guard';
 import { adminGuard } from './core/guards/admin.guard';
 import { superAdminGuard } from './core/guards/superadmin.guard';
 
-// 🔥 IMPORTAR EL COMPONENTE 404
-import { NotFoundComponent } from './not-found/not-found.component';
+// 🔥 IMPORTAR EL COMPONENTE 404 — RUTA CORRECTA
+import { NotFoundComponent } from './modules/not-found/not-found.component';
 
 export const routes: Routes = [
 
@@ -52,6 +52,6 @@ export const routes: Routes = [
   // ROOT
   { path: '', redirectTo: 'auth', pathMatch: 'full' },
 
-  // 🔥 GLOBAL 404 — Muestra una página, NO te manda al login
+  // 🔥 GLOBAL 404 — Página personalizada (NO redirige al login)
   { path: '**', component: NotFoundComponent }
 ];

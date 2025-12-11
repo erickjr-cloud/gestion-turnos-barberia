@@ -41,7 +41,11 @@
 
         <strong>{{ t.cliente }}</strong> —
         {{ t.fecha }} {{ t.hora }} — {{ t.servicio }}
-        <span>({{ t.estado }})</span>
+        <span 
+          [style.color]="(t.estado | estadoColor).color"
+        >
+          {{ (t.estado | estadoColor).texto }}
+        </span>
 
         <!-- ADMIN / BARBERO -->
         <button *ngIf="(role$ | async) === 'barbero' || (role$ | async) === 'admin'"

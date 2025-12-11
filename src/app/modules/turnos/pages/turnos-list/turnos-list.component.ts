@@ -6,11 +6,12 @@ import { Turno } from '../../interfaces/turno.interface';
 import { Observable, combineLatest, map, startWith } from 'rxjs';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth.service';
+import { EstadoPipe } from '../../pipes/estado.pipe'; // 👈 NUEVO IMPORT
 
 @Component({
   selector: 'app-turnos-list',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, EstadoPipe], // 👈 AGREGADO AQUÍ
   templateUrl: './turnos-list.component.html',
   styleUrls: ['./turnos-list.component.css']
 })

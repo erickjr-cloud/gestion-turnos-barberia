@@ -1,51 +1,51 @@
-<section class="turno-form-container">
+<section class="turno-form-container card-glass">
 
-  <h2>{{ titulo }}</h2>
+  <h2 class="title">{{ titulo }}</h2>
 
   <form [formGroup]="turnoForm" (ngSubmit)="onSubmit()">
 
-    <div class="form-group">
+    <!-- CLIENTE -->
+    <div class="form-group" [class.invalid]="isInvalid('cliente')">
       <label>Cliente:</label>
       <input type="text" formControlName="cliente">
-      <p *ngIf="turnoForm.get('cliente')?.touched && turnoForm.get('cliente')?.invalid" class="error">
-        El nombre del cliente es obligatorio.
-      </p>
+      <p *ngIf="isInvalid('cliente')" class="error">El nombre del cliente es obligatorio.</p>
     </div>
 
-    <div class="form-group">
+    <!-- FECHA -->
+    <div class="form-group" [class.invalid]="isInvalid('fecha')">
       <label>Fecha:</label>
-      <input type="date" formControlName="fecha">
-      <p *ngIf="turnoForm.get('fecha')?.touched && turnoForm.get('fecha')?.invalid" class="error">
-        Selecciona una fecha válida.
-      </p>
+      <input type="date" formControlName="fecha" (change)="validarFecha()">
+      <p *ngIf="isInvalid('fecha')" class="error">Selecciona una fecha válida (no pasada).</p>
     </div>
 
-    <div class="form-group">
+    <!-- HORA -->
+    <div class="form-group" [class.invalid]="isInvalid('hora') || horaOcupada">
       <label>Hora:</label>
-      <input type="time" formControlName="hora">
-      <p *ngIf="turnoForm.get('hora')?.touched && turnoForm.get('hora')?.invalid" class="error">
-        Selecciona una hora válida.
-      </p>
+      <input type="time" formControlName="hora" (change)="validarHora()">
+
+      <p *ngIf="isInvalid('hora')" class="error">Selecciona una hora válida.</p>
+      <p *ngIf="horaOcupada" class="error">Esta hora ya está reservada.</p>
     </div>
 
-    <div class="form-group">
+    <!-- SERVICIO -->
+    <div class="form-group" [class.invalid]="isInvalid('servicio')">
       <label>Servicio:</label>
       <input type="text" formControlName="servicio">
-      <p *ngIf="turnoForm.get('servicio')?.touched && turnoForm.get('servicio')?.invalid" class="error">
-        El servicio es obligatorio.
-      </p>
+      <p *ngIf="isInvalid('servicio')" class="error">El servicio es obligatorio.</p>
     </div>
 
+    <!-- NOTAS -->
     <div class="form-group">
       <label>Notas (opcional):</label>
       <textarea formControlName="notas"></textarea>
     </div>
 
-    <p *ngIf="errorMessage" class="error">
-      {{ errorMessage }}
-    </p>
+    <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
 
-    <button type="submit" [disabled]="turnoForm.invalid || loading" class="btn">
+    <button
+      type="submit"
+      [disabled]="turnoForm.invalid || loading || horaOcupada"
+      class="btn btn-gold">
       {{ loading ? 'Guardando...' : (modoEdicion ? 'Guardar Cambios' : 'Crear Turno') }}
     </button>
 
