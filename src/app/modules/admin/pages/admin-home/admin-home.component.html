@@ -1,14 +1,57 @@
 <h2>Panel del Administrador</h2>
 
 <p *ngIf="(role$ | async) === 'admin'">
-  Bienvenido administrador. Desde aquí puedes gestionar barberos, clientes y turnos.
+  Bienvenido administrador. Aquí puedes gestionar barberos, clientes y turnos.
 </p>
+
+<p *ngIf="(role$ | async) === 'superadmin'">
+  Bienvenido SUPERADMIN. Aquí tienes acceso a todas las estadísticas del sistema.
+</p>
+
+<hr>
+
+<!-- 🔥 ESTADÍSTICAS HOY -->
+<h3>Estadísticas del día</h3>
+
+<div class="cards">
+
+  <div class="card">
+    <h4>Total de turnos hoy</h4>
+    <p>{{ totalHoy }}</p>
+  </div>
+
+  <div class="card">
+    <h4>Pendientes</h4>
+    <p>{{ estadosHoy.pendientes }}</p>
+  </div>
+
+  <div class="card">
+    <h4>Confirmados</h4>
+    <p>{{ estadosHoy.confirmados }}</p>
+  </div>
+
+  <div class="card">
+    <h4>Completados</h4>
+    <p>{{ estadosHoy.completados }}</p>
+  </div>
+
+  <div class="card">
+    <h4>Cancelados</h4>
+    <p>{{ estadosHoy.cancelados }}</p>
+  </div>
+
+</div>
+
+<hr>
+
+<h3>Turnos Futuros</h3>
+<p>{{ totalFuturos }}</p>
+
+<hr>
 
 <ul>
   <li><a routerLink="/turnos">Ver todos los turnos</a></li>
   <li><a routerLink="/mis-turnos">Ver mis turnos (como cliente)</a></li>
-
   <li><a routerLink="/admin/barberos">Gestionar Barberos</a></li>
-
   <li><strong>En el futuro:</strong> Crear administradores</li>
 </ul>
