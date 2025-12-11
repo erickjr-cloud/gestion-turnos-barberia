@@ -5,6 +5,6 @@ export interface Turno {
   hora: string;         // Hora del turno
   servicio: string;     // Corte, barba, cejas, etc.
   notas?: string;       // Notas opcionales del barbero
-  estado: 'pendiente' | 'confirmado' | 'cancelado'; // Estado del turno
+  estado: 'pendiente' | 'confirmado' | 'cancelado' | 'completado'; // Estado del turno
   creadoPor: string;    // UID del barbero que creó el turno
 }

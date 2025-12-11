@@ -25,12 +25,17 @@ export class TurnosListComponent implements OnInit {
   role$!: Observable<any>;
   uid: string | null = null;
 
+  // ← Nuevo: guardar el rol sin tocar el BehaviorSubject privado
+  rolActual: string | null = null;
+
   constructor(
     private turnosService: TurnosService,
     private authService: AuthService,
     private router: Router
   ) {
     this.role$ = this.authService.currentUserRole$;
+
+    this.role$.subscribe(r => this.rolActual = r);
 
     this.authService.currentUser$.subscribe(user => {
       this.uid = user?.uid ?? null;
@@ -48,7 +53,28 @@ export class TurnosListComponent implements OnInit {
     ]).pipe(
       map(([turnos, servicio, fecha]) => {
 
+        const hoy = new Date();
+        hoy.setHours(0, 0, 0, 0);
+
         return turnos.filter(t => {
+
+          const fechaTurno = new Date(t.fecha + "T" + t.hora);
+          fechaTurno.setHours(0, 0, 0, 0);
+
+          // ============================
+          // FILTRO ESPECIAL CLIENTE
+          // ============================
+          if (this.rolActual === 'cliente') {
+
+            // No mostrar pasados
+            if (fechaTurno < hoy) return false;
+
+            // No mostrar cancelados ni completados
+            if (t.estado === 'cancelado' || t.estado === 'completado') {
+              return false;
+            }
+          }
+
           const coincideServicio =
             servicio.trim() === '' ||
             t.servicio.toLowerCase().includes(servicio.toLowerCase());
@@ -59,7 +85,6 @@ export class TurnosListComponent implements OnInit {
 
           return coincideServicio && coincideFecha;
         });
-
       })
     );
   }
@@ -84,26 +109,17 @@ export class TurnosListComponent implements OnInit {
 
     this.turnosService.deleteTurno(turno.id)
       .then(() => alert(`El turno de ${turno.cliente} fue eliminado correctamente.`))
-      .catch(err => {
-        console.error('Error al eliminar turno:', err);
-        alert('Ocurrió un error al eliminar el turno.');
-      });
+      .catch(err => console.error(err));
   }
 
   confirmarTurno(turno: Turno) {
     if (!turno.id) return;
-
-    this.turnosService.confirmarTurno(turno.id)
-      .then(() => alert('Turno confirmado'))
-      .catch(err => console.error(err));
+    this.turnosService.confirmarTurno(turno.id);
   }
 
   completarTurno(turno: Turno) {
     if (!turno.id) return;
-
-    this.turnosService.completarTurno(turno.id)
-      .then(() => alert('Turno completado'))
-      .catch(err => console.error(err));
+    this.turnosService.completarTurno(turno.id);
   }
 
   cancelarTurnoCliente(turno: Turno) {
@@ -117,9 +133,7 @@ export class TurnosListComponent implements OnInit {
     const ok = confirm("¿Seguro que deseas cancelar tu turno?");
     if (!ok) return;
 
-    this.turnosService.cancelarTurno(turno.id)
-      .then(() => alert("Tu turno fue cancelado."))
-      .catch(err => console.error(err));
+    this.turnosService.cancelarTurno(turno.id);
   }
 
 }
