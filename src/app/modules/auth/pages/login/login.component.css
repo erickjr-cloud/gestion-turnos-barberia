@@ -3,12 +3,29 @@
   display: flex;
   justify-content: center;
   align-items: center;
+
+  /* FONDO SOLO PARA LOGIN */
+  background:
+    linear-gradient(
+      rgba(11,11,13,0.55),
+      rgba(11,11,13,0.65)
+    ),
+    url('/img/hero.jpg') center / cover no-repeat;
 }
 
+/* TARJETA */
 .auth-card {
   width: 380px;
   padding: 32px;
   text-align: center;
+
+  /* refuerzo de vidrio */
+  background: rgba(18,18,22,0.75);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid var(--gold-soft);
+  border-radius: 14px;
+  box-shadow: 0 0 30px rgba(0,0,0,0.75);
 }
 
 /* TITULOS */
@@ -37,6 +54,13 @@
 .form-group label {
   font-size: 0.85rem;
   color: var(--text-muted);
+}
+
+/* INPUTS (refuerzo leve) */
+input {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid var(--gold-soft);
+  color: white;
 }
 
 /* BOTON */

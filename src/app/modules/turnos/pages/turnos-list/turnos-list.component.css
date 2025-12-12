@@ -85,3 +85,108 @@
   color: var(--text-muted);
   margin-top: 30px;
 }
+
+/* 🆕 PAGINACIÓN */
+.pagination-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  padding: 18px 20px;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.pagination-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.items-per-page {
+  padding: 8px 12px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-main);
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: all 0.3s ease;
+}
+
+.items-per-page:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--gold);
+}
+
+.items-per-page:focus {
+  outline: none;
+  border-color: var(--gold);
+}
+
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.btn-pagination {
+  padding: 8px 16px;
+  background: var(--gold);
+  color: var(--bg-dark);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+}
+
+.btn-pagination:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+  filter: brightness(1.1);
+}
+
+.btn-pagination:disabled {
+  background: rgba(150, 150, 150, 0.3);
+  color: var(--text-muted);
+  cursor: not-allowed;
+  opacity: 0.5;
+  box-shadow: none;
+}
+
+.page-numbers {
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  color: var(--text-main);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .pagination-container {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .pagination-info {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .turno-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .turno-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}

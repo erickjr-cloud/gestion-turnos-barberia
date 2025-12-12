@@ -16,8 +16,8 @@ body {
   margin: 0;
   font-family: 'Poppins', sans-serif;
   background: linear-gradient(
-      rgba(0,0,0,0.75),
-      rgba(0,0,0,0.85)
+      rgba(0,0,0,0.50),  /* 👈 Cambiado de 0.75 a 0.35 */
+      rgba(0,0,0,0.50)   /* 👈 Cambiado de 0.85 a 0.45 */
     ),
     url('/img/ciudad.jpg') center / cover fixed;
   color: var(--text-main);

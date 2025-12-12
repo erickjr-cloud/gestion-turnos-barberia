@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router'; // 👈 NUEVO
+import { RouterLink } from '@angular/router';
 import { TurnosService } from '../../services/turnos.service';
 import { Turno } from '../../interfaces/turno.interface';
 import { Observable, combineLatest, map, startWith } from 'rxjs';
@@ -12,7 +12,7 @@ import { EstadoPipe } from '../../pipes/estado.pipe';
 @Component({
   selector: 'app-turnos-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, EstadoPipe, RouterLink], // 👈 AGREGADO RouterLink
+  imports: [CommonModule, FormsModule, EstadoPipe, RouterLink],
   templateUrl: './turnos-list.component.html',
   styleUrls: ['./turnos-list.component.css']
 })
@@ -20,18 +20,23 @@ export class TurnosListComponent implements OnInit {
 
   turnos$!: Observable<Turno[]>;
   turnosFiltrados$!: Observable<Turno[]>;
+  turnosPaginados$!: Observable<Turno[]>; // 🆕 Observable para la lista paginada
 
   filtroServicio: string = '';
   filtroFecha: string = '';
 
-  // 🔥 NUEVO: controles de ordenamiento
+  // 🔥 Ordenamiento
   criterioOrden: 'fecha' | 'hora' | 'cliente' | 'servicio' | 'estado' = 'fecha';
   direccionOrden: 'asc' | 'desc' = 'asc';
 
+  // 🆕 Paginación
+  turnosPorPagina: number = 10;
+  paginaActual: number = 1;
+  totalTurnos: number = 0;
+  totalPaginas: number = 0;
+
   role$!: Observable<any>;
   uid: string | null = null;
-
-  // ← Rol actual (para reglas especiales del cliente)
   rolActual: string | null = null;
 
   constructor(
@@ -137,6 +142,23 @@ export class TurnosListComponent implements OnInit {
         return filtrados;
       })
     );
+
+    // 🆕 PAGINACIÓN
+    this.turnosPaginados$ = combineLatest([
+      this.turnosFiltrados$,
+      this.createInputStream(() => this.paginaActual),
+      this.createInputStream(() => this.turnosPorPagina)
+    ]).pipe(
+      map(([filtrados, pagina, porPagina]) => {
+        this.totalTurnos = filtrados.length;
+        this.totalPaginas = Math.ceil(this.totalTurnos / porPagina);
+
+        const inicio = (pagina - 1) * porPagina;
+        const fin = inicio + porPagina;
+
+        return filtrados.slice(inicio, fin);
+      })
+    );
   }
 
   // ⚠️ Tu truco para "escuchar" cambios de inputs cada 200 ms
@@ -145,6 +167,30 @@ export class TurnosListComponent implements OnInit {
       const interval = setInterval(() => sub.next(fn()), 200);
       return () => clearInterval(interval);
     }).pipe(startWith(fn()));
+  }
+
+  // 🆕 Métodos de paginación
+  irAPagina(pagina: number) {
+    if (pagina < 1 || pagina > this.totalPaginas) return;
+    this.paginaActual = pagina;
+  }
+
+  paginaAnterior() {
+    if (this.paginaActual > 1) {
+      this.paginaActual--;
+    }
+  }
+
+  paginaSiguiente() {
+    if (this.paginaActual < this.totalPaginas) {
+      this.paginaActual++;
+    }
+  }
+
+  cambiarTurnosPorPagina(event: Event) {
+    const select = event.target as HTMLSelectElement;
+    this.turnosPorPagina = Number(select.value);
+    this.paginaActual = 1; // Resetear a la primera página
   }
 
   editarTurno(turno: Turno) {

@@ -46,7 +46,7 @@
   </div>
 
   <!-- LISTA -->
-  <div *ngIf="turnosFiltrados$ | async as turnos; else cargando">
+  <div *ngIf="turnosPaginados$ | async as turnos; else cargando">
 
     <div *ngIf="turnos.length > 0; else vacio">
 
@@ -104,6 +104,34 @@
 
         </div>
 
+      </div>
+
+      <!-- 🆕 CONTROLES DE PAGINACIÓN -->
+      <div class="pagination-container glass">
+        <div class="pagination-info">
+          <span>Mostrando {{ (paginaActual - 1) * turnosPorPagina + 1 }} - {{ paginaActual * turnosPorPagina > totalTurnos ? totalTurnos : paginaActual * turnosPorPagina }} de {{ totalTurnos }} turnos</span>
+          
+          <select (change)="cambiarTurnosPorPagina($event)" [value]="turnosPorPagina" class="items-per-page">
+            <option value="5">5 por página</option>
+            <option value="10">10 por página</option>
+            <option value="20">20 por página</option>
+            <option value="50">50 por página</option>
+          </select>
+        </div>
+
+        <div class="pagination-controls">
+          <button (click)="paginaAnterior()" [disabled]="paginaActual === 1" class="btn-pagination">
+            ← Anterior
+          </button>
+
+          <span class="page-numbers">
+            Página {{ paginaActual }} de {{ totalPaginas }}
+          </span>
+
+          <button (click)="paginaSiguiente()" [disabled]="paginaActual === totalPaginas" class="btn-pagination">
+            Siguiente →
+          </button>
+        </div>
       </div>
 
     </div>
