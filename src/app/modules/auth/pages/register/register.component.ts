@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { CommonModule, NgIf } from '@angular/common';
+import { CommonModule } from '@angular/common'; // ✅ Solo CommonModule
 import {
   FormBuilder,
   FormGroup,
@@ -12,7 +12,7 @@ import { Router, RouterLink } from '@angular/router';
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, NgIf, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink], // ✅ Eliminado NgIf
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
 })
