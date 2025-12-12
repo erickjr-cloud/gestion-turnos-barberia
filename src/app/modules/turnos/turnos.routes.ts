@@ -4,6 +4,8 @@ import { Routes } from '@angular/router';
 import { CreateTurnoComponent } from './pages/create-turno/create-turno.component';
 import { TurnosListComponent } from './pages/turnos-list/turnos-list.component';
 import { TurnosHomeComponent } from './pages/turnos-home/turnos-home.component';
+import { SolicitarTurnoComponent } from './pages/solicitar-turno/solicitar-turno.component';
+
 
 /* ===========================================================
    🟦 RUTAS PARA CLIENTE (solo sus turnos)
@@ -44,5 +46,10 @@ export const TURNOS_ROUTES_BARBERO: Routes = [
     path: 'editar/:id',
     component: CreateTurnoComponent,
   },
+  {
+  path: 'solicitar',
+  component: SolicitarTurnoComponent
+  },
+
   { path: '**', redirectTo: '' }
 ];
