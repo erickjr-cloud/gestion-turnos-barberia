@@ -1,0 +1,24 @@
+<section class="glass">
+  <h2>Solicitar turno</h2>
+
+  <form [formGroup]="form" (ngSubmit)="enviar()">
+
+    <label>Fecha</label>
+    <input type="date" formControlName="fechaDeseada">
+
+    <label>Hora</label>
+    <input type="time" formControlName="horaDeseada">
+
+    <label>Servicio</label>
+    <input type="text" formControlName="servicio" placeholder="Corte, barba, cejas...">
+
+    <label>Notas (opcional)</label>
+    <textarea formControlName="notas"></textarea>
+
+    <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+    <button type="submit" [disabled]="form.invalid || loading">
+      {{ loading ? 'Enviando...' : 'Enviar solicitud' }}
+    </button>
+  </form>
+</section>
