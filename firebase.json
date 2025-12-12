@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "dist/gestion-turnos-barberia",
+    "public": "dist/gestion-turnos-barberia/browser",
     "ignore": [
       "firebase.json",
       "**/.*",
