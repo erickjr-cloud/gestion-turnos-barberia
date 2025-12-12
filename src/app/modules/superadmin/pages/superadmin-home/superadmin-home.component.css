@@ -1,21 +1,81 @@
+.superadmin-page {
+  padding: 40px;
+}
+
+/* HEADER */
+.superadmin-header {
+  margin-bottom: 30px;
+}
+
+.superadmin-header h2 {
+  margin: 0;
+  color: var(--gold);
+}
+
+.subtitle {
+  margin-top: 8px;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+/* CARDS */
+.superadmin-card {
+  padding: 24px;
+  margin-bottom: 30px;
+}
+
+.superadmin-card h3 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: var(--gold);
+}
+
+/* FORM CREAR */
+.form-crear {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 18px;
+  align-items: end;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-size: 0.8rem;
+  margin-bottom: 6px;
+  color: var(--text-muted);
+}
+
+.form-crear button {
+  height: 42px;
+}
+
+/* TABLA */
 table {
   width: 100%;
   border-collapse: collapse;
 }
 
-th, td {
-  padding: 10px;
-  border-bottom: 1px solid #ccc;
+th {
+  color: var(--gold);
+  text-align: left;
+  padding-bottom: 10px;
+}
+
+td {
+  padding: 10px 6px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
 }
 
 select {
-  padding: 5px;
+  width: 100%;
 }
 
-button {
-  padding: 6px 12px;
-  background: red;
-  color: white;
-  border: none;
-  cursor: pointer;
+/* LOADING */
+.loading {
+  color: var(--text-muted);
+  font-size: 0.9rem;
 }

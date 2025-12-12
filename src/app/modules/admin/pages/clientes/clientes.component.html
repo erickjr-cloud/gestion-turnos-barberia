@@ -1,44 +1,62 @@
-<h2>Gestionar clientes</h2>
+<section class="clientes-page">
 
-<div *ngIf="cargando">
-  Cargando clientes...
-</div>
+  <!-- HEADER -->
+  <div class="clientes-header glass">
+    <h2>Gestionar Clientes</h2>
+    <p class="subtitle">
+      Administración de cuentas de clientes y asignación de roles
+    </p>
+  </div>
 
-<table *ngIf="!cargando">
-  <thead>
-    <tr>
-      <th>Nombre</th>
-      <th>Email</th>
-      <th>Rol</th>
-      <th>Acciones</th>
-    </tr>
-  </thead>
+  <!-- CONTENIDO -->
+  <div class="clientes-card glass">
 
-  <tbody>
-    <tr *ngFor="let u of clientes">
+    <div *ngIf="cargando" class="loading">
+      Cargando clientes...
+    </div>
 
-      <td>{{ u.nombre }}</td>
-      <td>{{ u.email }}</td>
+    <table *ngIf="!cargando">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Email</th>
+          <th>Rol</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
 
-      <!-- CAMBIO DE ROL: cliente <-> barbero -->
-      <td>
-        <select
-          [ngModel]="u.rol"
-          (ngModelChange)="cambiarRol(u, $event)"
-        >
-          <option *ngFor="let r of roles" [value]="r">
-            {{ r }}
-          </option>
-        </select>
-      </td>
+      <tbody>
+        <tr *ngFor="let u of clientes">
 
-      <!-- ELIMINAR CLIENTE -->
-      <td>
-        <button (click)="eliminar(u)" style="color: red;">
-          Eliminar
-        </button>
-      </td>
+          <td>{{ u.nombre }}</td>
+          <td>{{ u.email }}</td>
 
-    </tr>
-  </tbody>
-</table>
+          <!-- CAMBIO DE ROL -->
+          <td>
+            <select
+              [ngModel]="u.rol"
+              (ngModelChange)="cambiarRol(u, $event)"
+            >
+              <option *ngFor="let r of roles" [value]="r">
+                {{ r }}
+              </option>
+            </select>
+          </td>
+
+          <!-- ELIMINAR -->
+          <td>
+            <button
+              class="btn btn-danger"
+              (click)="eliminar(u)"
+            >
+              Eliminar
+            </button>
+          </td>
+
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+
+</section>

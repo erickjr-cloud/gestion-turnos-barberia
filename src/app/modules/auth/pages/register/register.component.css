@@ -1,22 +1,58 @@
+.auth-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.auth-card {
+  width: 420px;
+  padding: 32px;
+  text-align: center;
+}
+
+/* TITULOS */
+.auth-title {
+  margin-bottom: 6px;
+  color: var(--gold);
+}
+
+.auth-subtitle {
+  margin-bottom: 24px;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+/* FORM */
 .form-container {
   display: flex;
   flex-direction: column;
-  width: 260px;
+  gap: 18px;
 }
 
-.form-field {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 10px;
+.form-group {
+  text-align: left;
 }
 
-input {
-  padding: 5px;
-  border: 1px solid #aaa;
-  border-radius: 4px;
+.form-group label {
+  font-size: 0.85rem;
+  color: var(--text-muted);
 }
 
+/* BOTON */
 button {
-  padding: 8px;
-  cursor: pointer;
+  margin-top: 10px;
+}
+
+/* LINK */
+.auth-link {
+  display: block;
+  margin-top: 20px;
+  font-size: 0.85rem;
+  color: var(--info);
+  text-decoration: none;
+}
+
+.auth-link:hover {
+  text-decoration: underline;
 }

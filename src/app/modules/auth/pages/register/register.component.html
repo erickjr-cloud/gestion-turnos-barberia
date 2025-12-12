@@ -1,28 +1,51 @@
 <section class="auth-container">
 
-  <h2>Crear Cuenta</h2>
+  <div class="auth-card glass">
 
-  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="form-container">
+    <h2 class="auth-title">Crear Cuenta</h2>
+    <p class="auth-subtitle">
+      Regístrate para gestionar tus turnos de forma sencilla
+    </p>
 
-    <div class="form-group">
-      <label>Nombre:</label>
-      <input type="text" formControlName="name">
-    </div>
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="form-container">
 
-    <div class="form-group">
-      <label>Email:</label>
-      <input type="email" formControlName="email">
-    </div>
+      <div class="form-group">
+        <label>Nombre</label>
+        <input
+          type="text"
+          formControlName="name"
+          placeholder="Tu nombre completo"
+        >
+      </div>
 
-    <div class="form-group">
-      <label>Contraseña:</label>
-      <input type="password" formControlName="password">
-    </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input
+          type="email"
+          formControlName="email"
+          placeholder="correo@ejemplo.com"
+        >
+      </div>
 
-    <button type="submit" class="btn">Registrarme</button>
+      <div class="form-group">
+        <label>Contraseña</label>
+        <input
+          type="password"
+          formControlName="password"
+          placeholder="••••••••"
+        >
+      </div>
 
-  </form>
+      <button type="submit" class="btn btn-gold">
+        Registrarme
+      </button>
 
-  <a routerLink="/auth" class="link">¿Ya tienes cuenta? Inicia sesión aquí</a>
+    </form>
+
+    <a routerLink="/auth" class="auth-link">
+      ¿Ya tienes cuenta? Inicia sesión aquí
+    </a>
+
+  </div>
 
 </section>

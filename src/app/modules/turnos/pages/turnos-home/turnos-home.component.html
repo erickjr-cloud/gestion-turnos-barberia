@@ -1,25 +1,52 @@
-<h1>Gestión de Turnos</h1>
+<section class="turnos-home">
 
-<!-- 🟣 DASHBOARD BÁSICO -->
-<h3>Resumen de Turnos</h3>
+  <!-- HERO / ENCABEZADO -->
+  <div class="hero glass">
+    <h1>Gestión de Turnos</h1>
+    <p class="subtitle">
+      Control y administración eficiente de citas para tu barbería
+    </p>
 
-<ul>
-  <li>Total de turnos: <strong>{{ totalTurnos }}</strong></li>
-  <li>Pendientes: <strong>{{ pendientes }}</strong></li>
-  <li>Completados: <strong>{{ completados }}</strong></li>
-  <li>Cancelados: <strong>{{ cancelados }}</strong></li>
-</ul>
+    <div class="hero-actions">
+      <a routerLink="list" class="btn btn-info">
+        📋 Ver lista de turnos
+      </a>
+      <a routerLink="crear" class="btn btn-gold">
+        ➕ Crear nuevo turno
+      </a>
+    </div>
+  </div>
 
-<hr>
+  <!-- DASHBOARD -->
+  <div class="dashboard glass">
+    <h3>Resumen de Turnos</h3>
 
-<p>Selecciona una opción:</p>
+    <div class="stats">
+      <div class="stat">
+        <span class="label">Total</span>
+        <strong>{{ totalTurnos }}</strong>
+      </div>
 
-<nav>
-  <a routerLink="list">📋 Ver lista de turnos</a> |
-  <a routerLink="crear">➕ Crear nuevo turno</a>
-</nav>
+      <div class="stat">
+        <span class="label">Pendientes</span>
+        <strong>{{ pendientes }}</strong>
+      </div>
 
-<hr>
+      <div class="stat">
+        <span class="label">Completados</span>
+        <strong>{{ completados }}</strong>
+      </div>
 
-<!-- Páginas hijas -->
-<router-outlet></router-outlet>
+      <div class="stat danger">
+        <span class="label">Cancelados</span>
+        <strong>{{ cancelados }}</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTENIDO HIJO -->
+  <div class="child-content">
+    <router-outlet></router-outlet>
+  </div>
+
+</section>

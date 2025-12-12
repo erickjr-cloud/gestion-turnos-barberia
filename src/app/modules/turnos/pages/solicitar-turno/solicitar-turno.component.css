@@ -1,3 +1,57 @@
-.glass { padding: 18px; border-radius: 12px; }
-.error { margin-top: 10px; }
-button { margin-top: 12px; }
+.solicitar-wrapper {
+  padding: 40px;
+  display: flex;
+  justify-content: center;
+}
+
+.solicitar-card {
+  width: 100%;
+  max-width: 520px;
+  padding: 32px;
+}
+
+/* TITULOS */
+.title {
+  margin-bottom: 6px;
+  color: var(--gold);
+}
+
+.subtitle {
+  margin-bottom: 24px;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+/* FORM */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-size: 0.8rem;
+  margin-bottom: 6px;
+  color: var(--text-muted);
+}
+
+textarea {
+  resize: none;
+}
+
+/* ERROR */
+.error {
+  color: var(--danger);
+  font-size: 0.85rem;
+  margin-top: 6px;
+}
+
+/* BOTON */
+button {
+  margin-top: 10px;
+}

@@ -1,15 +1,87 @@
-.btn-solicitar {
-  display: inline-block;
-  padding: 12px 24px;
-  background-color: #28a745;
-  color: white;
-  text-decoration: none;
-  border-radius: 5px;
-  font-weight: bold;
-  transition: background-color 0.3s;
-  cursor: pointer;
+.turnos-list {
+  padding: 30px;
 }
 
-.btn-solicitar:hover {
-  background-color: #218838;
+/* HEADER */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.header h2 {
+  margin: 0;
+  color: var(--gold);
+}
+
+/* FILTROS */
+.filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 20px;
+  padding: 20px;
+  margin-bottom: 30px;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.filter-group label {
+  font-size: 0.8rem;
+  margin-bottom: 6px;
+  color: var(--text-muted);
+}
+
+/* CARD DE TURNO */
+.turno-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px;
+  margin-bottom: 14px;
+  gap: 20px;
+}
+
+.turno-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.turno-info strong {
+  font-size: 1rem;
+  color: var(--text-main);
+}
+
+.turno-info span {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.estado {
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+/* ACCIONES */
+.turno-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.turno-actions button {
+  font-size: 0.75rem;
+  padding: 6px 10px;
+}
+
+/* MENSAJES */
+.empty {
+  text-align: center;
+  color: var(--text-muted);
+  margin-top: 30px;
 }

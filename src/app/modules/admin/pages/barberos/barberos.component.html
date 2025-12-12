@@ -1,42 +1,60 @@
-<h2>Gestionar Barberos</h2>
+<section class="barberos-page">
 
-<div *ngIf="cargando">Cargando...</div>
+  <!-- HEADER -->
+  <div class="barberos-header glass">
+    <h2>Gestionar Barberos</h2>
+    <p class="subtitle">
+      Administración de cuentas y roles del personal
+    </p>
+  </div>
 
-<table *ngIf="!cargando">
+  <!-- CONTENIDO -->
+  <div class="barberos-card glass">
 
-  <thead>
-    <tr>
-      <th>Nombre</th>
-      <th>Email</th>
-      <th>Rol</th>
-      <th>Acciones</th>
-    </tr>
-  </thead>
+    <div *ngIf="cargando" class="loading">
+      Cargando barberos...
+    </div>
 
-  <tbody>
-    <tr *ngFor="let u of barberos">
+    <table *ngIf="!cargando">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Email</th>
+          <th>Rol</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
 
-      <td>{{ u.nombre }}</td>
-      <td>{{ u.email }}</td>
+      <tbody>
+        <tr *ngFor="let u of barberos">
 
-      <td>
-        <select
-          [ngModel]="u.rol"
-          (ngModelChange)="cambiarRol(u, $event)"
-        >
-          <option *ngFor="let r of roles" [value]="r">
-            {{ r }}
-          </option>
-        </select>
-      </td>
+          <td>{{ u.nombre }}</td>
+          <td>{{ u.email }}</td>
 
-      <td>
-        <button (click)="eliminar(u)" style="color: red;">
-          Eliminar
-        </button>
-      </td>
+          <td>
+            <select
+              [ngModel]="u.rol"
+              (ngModelChange)="cambiarRol(u, $event)"
+            >
+              <option *ngFor="let r of roles" [value]="r">
+                {{ r }}
+              </option>
+            </select>
+          </td>
 
-    </tr>
-  </tbody>
+          <td>
+            <button
+              class="btn btn-danger"
+              (click)="eliminar(u)"
+            >
+              Eliminar
+            </button>
+          </td>
 
-</table>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+
+</section>

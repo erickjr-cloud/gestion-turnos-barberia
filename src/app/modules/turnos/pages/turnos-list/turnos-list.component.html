@@ -1,97 +1,121 @@
-<h2>Lista de Turnos</h2>
+<section class="turnos-list">
 
-<!-- 🟦 BOTÓN PARA SOLICITAR TURNO (SOLO CLIENTES) -->
-<div *ngIf="(role$ | async) === 'cliente'" style="margin-bottom: 20px;">
-  <a routerLink="/mis-turnos/solicitar" class="btn-solicitar">
-    ➕ Solicitar Nuevo Turno
-  </a>
-</div>
+  <div class="header glass">
+    <h2>Lista de Turnos</h2>
 
-<!-- FILTROS -->
-<div>
-  <label>Filtrar por servicio: </label>
-  <input type="text" [(ngModel)]="filtroServicio">
+    <!-- BOTÓN CLIENTE -->
+    <div *ngIf="(role$ | async) === 'cliente'">
+      <a routerLink="/mis-turnos/solicitar" class="btn btn-success">
+        ➕ Solicitar Nuevo Turno
+      </a>
+    </div>
+  </div>
 
-  <label>Filtrar por fecha: </label>
-  <input type="date" [(ngModel)]="filtroFecha">
-</div>
+  <!-- FILTROS -->
+  <div class="filters glass">
 
-<br>
+    <div class="filter-group">
+      <label>Servicio</label>
+      <input type="text" [(ngModel)]="filtroServicio">
+    </div>
 
-<!-- 🔥 CONTROLES DE ORDENAMIENTO -->
-<div>
-  <label>Ordenar por: </label>
-  <select [(ngModel)]="criterioOrden">
-    <option value="fecha">Fecha</option>
-    <option value="hora">Hora</option>
-    <option value="cliente">Cliente</option>
-    <option value="servicio">Servicio</option>
-    <option value="estado">Estado</option>
-  </select>
+    <div class="filter-group">
+      <label>Fecha</label>
+      <input type="date" [(ngModel)]="filtroFecha">
+    </div>
 
-  <label>Dirección: </label>
-  <select [(ngModel)]="direccionOrden">
-    <option value="asc">Ascendente</option>
-    <option value="desc">Descendente</option>
-  </select>
-</div>
+    <div class="filter-group">
+      <label>Ordenar por</label>
+      <select [(ngModel)]="criterioOrden">
+        <option value="fecha">Fecha</option>
+        <option value="hora">Hora</option>
+        <option value="cliente">Cliente</option>
+        <option value="servicio">Servicio</option>
+        <option value="estado">Estado</option>
+      </select>
+    </div>
 
-<br>
-
-<!-- LISTA -->
-<div *ngIf="turnosFiltrados$ | async as turnos; else cargando">
-
-  <div *ngIf="turnos.length > 0; else vacio">
-
-    <ul>
-      <li *ngFor="let t of turnos">
-
-        <strong>{{ t.cliente }}</strong> —
-        {{ t.fecha }} {{ t.hora }} — {{ t.servicio }}
-        <span 
-          [style.color]="(t.estado | estadoColor).color"
-        >
-          {{ (t.estado | estadoColor).texto }}
-        </span>
-
-        <!-- ADMIN / BARBERO -->
-        <button *ngIf="(role$ | async) === 'barbero' || (role$ | async) === 'admin'"
-                (click)="editarTurno(t)">
-          Editar
-        </button>
-
-        <button *ngIf="(role$ | async) === 'admin'"
-                (click)="eliminarTurno(t)">
-          Eliminar
-        </button>
-
-        <button *ngIf="(role$ | async) === 'barbero' || (role$ | async) === 'admin'"
-                (click)="confirmarTurno(t)">
-          Confirmar
-        </button>
-
-        <button *ngIf="(role$ | async) === 'barbero' || (role$ | async) === 'admin'"
-                (click)="completarTurno(t)">
-          Completar
-        </button>
-
-        <!-- CLIENTE: cancelar su turno -->
-        <button *ngIf="(role$ | async) === 'cliente' && t.creadoPor === uid"
-                (click)="cancelarTurnoCliente(t)">
-          Cancelar mi turno
-        </button>
-
-      </li>
-    </ul>
+    <div class="filter-group">
+      <label>Dirección</label>
+      <select [(ngModel)]="direccionOrden">
+        <option value="asc">Ascendente</option>
+        <option value="desc">Descendente</option>
+      </select>
+    </div>
 
   </div>
 
-</div>
+  <!-- LISTA -->
+  <div *ngIf="turnosFiltrados$ | async as turnos; else cargando">
 
-<ng-template #cargando>
-  <p>Cargando turnos...</p>
-</ng-template>
+    <div *ngIf="turnos.length > 0; else vacio">
 
-<ng-template #vacio>
-  <p>No hay turnos registrados con esos filtros.</p>
-</ng-template>
+      <div class="turno-card glass" *ngFor="let t of turnos">
+
+        <div class="turno-info">
+          <strong>{{ t.cliente }}</strong>
+          <span>{{ t.fecha }} • {{ t.hora }}</span>
+          <span>{{ t.servicio }}</span>
+
+          <span
+            class="estado"
+            [style.color]="(t.estado | estadoColor).color"
+          >
+            {{ (t.estado | estadoColor).texto }}
+          </span>
+        </div>
+
+        <div class="turno-actions">
+
+          <button
+            class="btn btn-info"
+            *ngIf="(role$ | async) === 'barbero' || (role$ | async) === 'admin'"
+            (click)="editarTurno(t)">
+            Editar
+          </button>
+
+          <button
+            class="btn btn-danger"
+            *ngIf="(role$ | async) === 'admin'"
+            (click)="eliminarTurno(t)">
+            Eliminar
+          </button>
+
+          <button
+            class="btn btn-gold"
+            *ngIf="(role$ | async) === 'barbero' || (role$ | async) === 'admin'"
+            (click)="confirmarTurno(t)">
+            Confirmar
+          </button>
+
+          <button
+            class="btn btn-success"
+            *ngIf="(role$ | async) === 'barbero' || (role$ | async) === 'admin'"
+            (click)="completarTurno(t)">
+            Completar
+          </button>
+
+          <button
+            class="btn btn-danger"
+            *ngIf="(role$ | async) === 'cliente' && t.creadoPor === uid"
+            (click)="cancelarTurnoCliente(t)">
+            Cancelar
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <ng-template #cargando>
+    <p class="empty">Cargando turnos...</p>
+  </ng-template>
+
+  <ng-template #vacio>
+    <p class="empty">No hay turnos registrados con esos filtros.</p>
+  </ng-template>
+
+</section>

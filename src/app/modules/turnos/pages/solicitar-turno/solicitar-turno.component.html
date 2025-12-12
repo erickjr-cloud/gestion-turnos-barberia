@@ -1,24 +1,52 @@
-<section class="glass">
-  <h2>Solicitar turno</h2>
+<section class="solicitar-wrapper">
 
-  <form [formGroup]="form" (ngSubmit)="enviar()">
+  <div class="solicitar-card glass">
 
-    <label>Fecha</label>
-    <input type="date" formControlName="fechaDeseada">
+    <h2 class="title">Solicitar Turno</h2>
+    <p class="subtitle">
+      Completa el formulario para enviar tu solicitud
+    </p>
 
-    <label>Hora</label>
-    <input type="time" formControlName="horaDeseada">
+    <form [formGroup]="form" (ngSubmit)="enviar()" class="form">
 
-    <label>Servicio</label>
-    <input type="text" formControlName="servicio" placeholder="Corte, barba, cejas...">
+      <div class="form-group">
+        <label>Fecha</label>
+        <input type="date" formControlName="fechaDeseada">
+      </div>
 
-    <label>Notas (opcional)</label>
-    <textarea formControlName="notas"></textarea>
+      <div class="form-group">
+        <label>Hora</label>
+        <input type="time" formControlName="horaDeseada">
+      </div>
 
-    <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+      <div class="form-group">
+        <label>Servicio</label>
+        <input
+          type="text"
+          formControlName="servicio"
+          placeholder="Corte, barba, cejas..."
+        >
+      </div>
 
-    <button type="submit" [disabled]="form.invalid || loading">
-      {{ loading ? 'Enviando...' : 'Enviar solicitud' }}
-    </button>
-  </form>
+      <div class="form-group">
+        <label>Notas (opcional)</label>
+        <textarea formControlName="notas" rows="3"></textarea>
+      </div>
+
+      <p class="error" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </p>
+
+      <button
+        type="submit"
+        class="btn btn-gold"
+        [disabled]="form.invalid || loading"
+      >
+        {{ loading ? 'Enviando...' : 'Enviar solicitud' }}
+      </button>
+
+    </form>
+
+  </div>
+
 </section>
