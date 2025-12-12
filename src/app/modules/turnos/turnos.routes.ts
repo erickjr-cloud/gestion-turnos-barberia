@@ -5,6 +5,7 @@ import { CreateTurnoComponent } from './pages/create-turno/create-turno.componen
 import { TurnosListComponent } from './pages/turnos-list/turnos-list.component';
 import { TurnosHomeComponent } from './pages/turnos-home/turnos-home.component';
 import { SolicitarTurnoComponent } from './pages/solicitar-turno/solicitar-turno.component';
+import { SolicitudesListComponent } from './pages/solicitudes-list/solicitudes-list.component';
 
 
 /* ===========================================================
@@ -14,6 +15,10 @@ export const TURNOS_ROUTES_CLIENTE: Routes = [
   {
     path: '',
     component: TurnosListComponent,  // El cliente entra directo a la lista
+  },
+  {
+    path: 'solicitar',  // 👈 NUEVA RUTA PARA CLIENTES
+    component: SolicitarTurnoComponent,
   },
   {
     path: 'crear',
@@ -47,9 +52,12 @@ export const TURNOS_ROUTES_BARBERO: Routes = [
     component: CreateTurnoComponent,
   },
   {
-  path: 'solicitar',
-  component: SolicitarTurnoComponent
+    path: 'solicitar',
+    component: SolicitarTurnoComponent
   },
-
+  {
+    path: 'solicitudes',
+    component: SolicitudesListComponent
+  },
   { path: '**', redirectTo: '' }
 ];

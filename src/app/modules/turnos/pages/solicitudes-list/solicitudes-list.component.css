@@ -1,0 +1,20 @@
+h2 {
+  margin-bottom: 1rem;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+li {
+  background: rgba(255,255,255,0.05);
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+}
+
+.estado {
+  color: gold;
+  font-weight: bold;
+}

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth.service';
 import { SolicitudesService } from '../../services/solicitudes.service';
@@ -17,19 +17,23 @@ export class SolicitarTurnoComponent {
   loading = false;
   errorMessage = '';
 
-  form = this.fb.group({
-    fechaDeseada: ['', Validators.required],
-    horaDeseada: ['', Validators.required],
-    servicio: ['', Validators.required],
-    notas: ['']
-  });
+  // ✅ SOLO declaramos, no inicializamos aquí
+  form!: FormGroup;
 
   constructor(
     private fb: FormBuilder,
     private auth: AuthService,
     private solicitudes: SolicitudesService,
     private router: Router
-  ) {}
+  ) {
+    // ✅ INICIALIZACIÓN CORRECTA
+    this.form = this.fb.group({
+      fechaDeseada: ['', Validators.required],
+      horaDeseada: ['', Validators.required],
+      servicio: ['', Validators.required],
+      notas: ['']
+    });
+  }
 
   enviar() {
     if (this.form.invalid) {
@@ -51,13 +55,16 @@ export class SolicitarTurnoComponent {
       clienteUid: user.uid,
       clienteNombre: user.displayName ?? 'Cliente',
       ...(this.form.value as any)
-    }).then(() => {
+    })
+    .then(() => {
       alert('Solicitud enviada. El barbero la revisará.');
       this.form.reset();
       this.router.navigate(['/mis-turnos']);
-    }).catch(err => {
+    })
+    .catch(err => {
       console.error(err);
       this.errorMessage = 'Error al enviar solicitud.';
-    }).finally(() => this.loading = false);
+    })
+    .finally(() => this.loading = false);
   }
 }

@@ -1,0 +1,25 @@
+<h2>Solicitudes de Turno</h2>
+
+<div *ngIf="solicitudes$ | async as solicitudes; else cargando">
+
+  <p *ngIf="solicitudes.length === 0">
+    No hay solicitudes pendientes.
+  </p>
+
+  <ul *ngIf="solicitudes.length > 0">
+    <li *ngFor="let s of solicitudes">
+      <strong>{{ s.clienteNombre }}</strong> —
+      {{ s.fechaDeseada }} {{ s.horaDeseada }} —
+      {{ s.servicio }}
+
+      <p *ngIf="s.notas">📝 {{ s.notas }}</p>
+
+      <span class="estado">Pendiente</span>
+    </li>
+  </ul>
+
+</div>
+
+<ng-template #cargando>
+  <p>Cargando solicitudes...</p>
+</ng-template>

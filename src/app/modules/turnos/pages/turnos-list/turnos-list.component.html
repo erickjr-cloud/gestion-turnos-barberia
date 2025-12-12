@@ -1,5 +1,12 @@
 <h2>Lista de Turnos</h2>
 
+<!-- 🟦 BOTÓN PARA SOLICITAR TURNO (SOLO CLIENTES) -->
+<div *ngIf="(role$ | async) === 'cliente'" style="margin-bottom: 20px;">
+  <a routerLink="/mis-turnos/solicitar" class="btn-solicitar">
+    ➕ Solicitar Nuevo Turno
+  </a>
+</div>
+
 <!-- FILTROS -->
 <div>
   <label>Filtrar por servicio: </label>

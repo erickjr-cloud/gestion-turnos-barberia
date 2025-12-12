@@ -1,0 +1,15 @@
+.btn-solicitar {
+  display: inline-block;
+  padding: 12px 24px;
+  background-color: #28a745;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: bold;
+  transition: background-color 0.3s;
+  cursor: pointer;
+}
+
+.btn-solicitar:hover {
+  background-color: #218838;
+}
