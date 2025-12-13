@@ -39,6 +39,7 @@ La aplicación maneja **roles con permisos diferenciados**:
 ### 🔐 SuperAdmin
 - Control total del sistema
 - Gestión de administradores
+.creacion de usuarios barberos y aadministradores
 
 ---
 
@@ -55,6 +56,7 @@ La aplicación maneja **roles con permisos diferenciados**:
 - Página 404 personalizada
 - Dashboard administrativo
 - Diseño moderno estilo **vidrio oscuro (glassmorphism)**
+-panel propio para cada rol
 
 ---
 
