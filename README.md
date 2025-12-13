@@ -1,59 +1,82 @@
-# GestionTurnosBarberia
+# Gestión de Turnos para Barbería 💈
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.8.
+**Autor:** Erick Jhunior Huaman Cruz  
+**Curso:** Programación Web  
+**Framework:** Angular + Firebase  
 
-## Development server
+---
 
-To start a local development server, run:
+## 📌 Descripción del Proyecto
 
-```bash
-ng serve
-```
+Este proyecto es una **aplicación web de gestión de turnos para una barbería**, desarrollada con Angular y Firebase.  
+Permite administrar citas de clientes con diferentes roles de usuario, aplicando buenas prácticas de desarrollo frontend y backend en tiempo real.
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+La aplicación está pensada para resolver un problema real:  
+👉 **organizar, controlar y administrar turnos de una barbería de manera digital**.
 
-## Code scaffolding
+---
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## 👥 Roles del Sistema
 
-```bash
-ng generate component component-name
-```
+La aplicación maneja **roles con permisos diferenciados**:
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+### 🧑 Cliente
+- Registrarse e iniciar sesión
+- Solicitar un turno
+- Ver sus turnos futuros
+- Cancelar sus propios turnos
 
-```bash
-ng generate --help
-```
+### 💈 Barbero
+- Ver turnos asignados
+- Confirmar turnos
+- Marcar turnos como completados
 
-## Building
+### 🛠️ Administrador
+- CRUD completo de turnos
+- Gestión de clientes y barberos
+- Acceso al dashboard con estadísticas
 
-To build the project run:
+### 🔐 SuperAdmin
+- Control total del sistema
+- Gestión de administradores
 
-```bash
-ng build
-```
+---
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## ⚙️ Funcionalidades Principales
 
-## Running unit tests
+- Autenticación con Firebase Authentication
+- CRUD de turnos en Firestore
+- Roles y guards de seguridad
+- Formularios reactivos con validaciones
+- Filtros por servicio y fecha
+- Ordenamiento dinámico
+- **Paginación**
+- Pipe personalizado para estados
+- Página 404 personalizada
+- Dashboard administrativo
+- Diseño moderno estilo **vidrio oscuro (glassmorphism)**
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+---
 
-```bash
-ng test
-```
+## 🧪 Tecnologías Utilizadas
 
-## Running end-to-end tests
+- Angular 20 (Standalone Components)
+- Firebase (Auth + Firestore + Hosting)
+- TypeScript
+- HTML5 / CSS3
+- RxJS
+- Git & GitHub
 
-For end-to-end (e2e) testing, run:
+---
 
-```bash
-ng e2e
-```
+## 🌐 Aplicación lista para Producción (Firebase Hosting)
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+🔗 **URL:**  
+https://gestion-turnos-barberia.web.app
 
-## Additional Resources
+---
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## 🎥 Video de Demostración
+
+📹 **Video explicativo del proyecto:**  
+👉 *(https://drive.google.com/file/d/1y2hpNTZtJ1MI1X3PL5XB__sC_MCSckB3/view?usp=drive_link)*
